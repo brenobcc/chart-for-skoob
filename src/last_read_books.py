@@ -1,6 +1,7 @@
 import requests
 import json
 from PIL import Image
+import io
 from io import BytesIO
     
 user_id = input("input your profile id: ")
@@ -23,31 +24,27 @@ if response.status_code == 200:
     n = 12
 
     try:
-        paths = []
+        chart_imgs = []
 
         # Algoritmo para varrer JSON
         for i in range(n):
             target_element = response_json["response"][i]
             book_edition = target_element["edicao"]
             book_name = book_edition["titulo"]
-            book_image = book_edition["capa_pequena"]
+            book_img = book_edition["capa_pequena"]
 
-            response_image = requests.get(book_image, headers=headers)
+            response_img = requests.get(book_img, headers=headers)
 
             # BytesIO converte para que Image consiga ler a requisição
-            img_book = Image.open(BytesIO(response_image.content))
+            img_book = Image.open(BytesIO(response_img.content))
 
             new_size = (100, 150)
-            img_book_resized = img_book.resize(new_size, Image.Resampling.LANCZOS)
+            book_img_resized = img_book.resize(new_size, Image.Resampling.LANCZOS)
 
-            path = f"{book_name}_resized.jpg"
-            img_book_resized.save(path)
+            img_byte_value = io.BytesIO()
 
-            paths.append(path)
-
-            # Salvar na pasta local
-            # with open(f"static/images/{book_name}.jpg", "wb") as file:
-            #     file.write(response_image.content)
+            book_img_resized.save(img_byte_value, format="JPEG")
+            chart_imgs.append(img_byte_value.getvalue())
     
     except Exception as e:
         print(e)
@@ -58,10 +55,11 @@ if response.status_code == 200:
     new_size = (100, 150)
 
     grid = Image.new("RGB", (largura, altura), (255, 255, 255))
-    for i, image in enumerate(paths):
+    for i, image in enumerate(chart_imgs):
         if i >= 3 * 4:
             break
         
+        image = io.BytesIO(image)
         image = Image.open(image)
 
         x = (i % 4) * new_size[0]
