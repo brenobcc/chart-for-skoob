@@ -20,7 +20,7 @@ if response.status_code == 200:
     # with open("logs/log.json", "w", encoding="utf-8") as file:
     #     json.dump(response_json, file, indent=4, ensure_ascii=False)
 
-    n = 5
+    n = 12
 
     try:
         paths = []
@@ -38,13 +38,12 @@ if response.status_code == 200:
             img_book = Image.open(BytesIO(response_image.content))
 
             new_size = (100, 150)
-            img_book_resized = img_book.resize(new_size, Image.Resampling.BILINEAR)
+            img_book_resized = img_book.resize(new_size, Image.Resampling.LANCZOS)
 
-            path = f"/img/{book_name}_resized.jpg"
+            path = f"{book_name}_resized.jpg"
             img_book_resized.save(path)
 
             paths.append(path)
-            
 
             # Salvar na pasta local
             # with open(f"static/images/{book_name}.jpg", "wb") as file:
@@ -52,3 +51,22 @@ if response.status_code == 200:
     
     except Exception as e:
         print(e)
+
+    #Montar grid
+    largura = 100 * 4
+    altura = 150 * 3
+    new_size = (100, 150)
+
+    grid = Image.new("RGB", (largura, altura), (255, 255, 255))
+    for i, image in enumerate(paths):
+        if i >= 3 * 4:
+            break
+        
+        image = Image.open(image)
+
+        x = (i % 4) * new_size[0]
+        y = (i // 4) * new_size[1]
+
+        grid.paste(image, (x, y))
+
+    grid.save("grid4x3.jpg")
