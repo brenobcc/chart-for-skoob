@@ -4,15 +4,16 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 import io
 from io import BytesIO
 import time
+from datetime import datetime
 
 # Colocar todos os livros lidos em uma única página
-def mock_first_page(url, headers, user_id):
+def mock_first_page(url, headers, user_id, year):
     try:
         response = requests.get(url, headers=headers)
         response_json = response.json()
         total_books = response_json["paging"]["total"]
 
-        new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:2024/page:1/limit:{total_books}/"
+        new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:{total_books}/"
 
         return new_url
     except Exception(e):
@@ -77,6 +78,65 @@ def apply_gradient(book_img):
 
     return Image.alpha_composite(book_img, gradient_alpha)
 
+def create_byte_image_array(response_json, book_quantity, year, user_id):
+    chart_imgs = {}
+    total_books_json = response_json["paging"]["total"]
+
+    book_count = 0
+
+    while book_count < book_quantity:
+
+        if total_books_json <= book_count:
+            year -= 1
+            previous_year_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
+
+            previous_year_url = mock_first_page(previous_year_url, headers, user_id, year)
+
+            response = requests.get(previous_year_url, headers=headers)
+
+            response_json = response.json()
+
+            total_books_json = response_json["paging"]["total"]
+
+
+        # Algoritmo para varrer JSON
+        for i in range(total_books_json - 1, -1, -1):
+
+            target_element = response_json["response"][i]
+
+            book_edition = target_element["edicao"]
+            book_name = book_edition["titulo"]
+            book_img = book_edition["capa_grande"]
+
+            response_img = requests.get(book_img, headers=headers)
+
+            # BytesIO converte para que Image consiga ler a requisição
+            book_img_byte = Image.open(BytesIO(response_img.content))
+
+            # Melhorar qualidade
+            # book_img_byte = improve_image_quality(book_img_byte)
+
+            new_size = (419, 633)
+            book_img_resized = book_img_byte.resize(new_size, Image.Resampling.LANCZOS)
+
+
+            book_img_resized = apply_gradient(book_img_resized)
+            paste_data(target_element, book_img_resized)
+
+            book_img_resized = book_img_resized.convert("RGB")
+
+                # Salva dinamicamente a imagem em bytes em um array
+            img_byte_value = io.BytesIO()
+
+            book_img_resized.save(img_byte_value, format="JPEG")
+            chart_imgs[f"{book_name}"] = img_byte_value.getvalue()
+
+            book_count += 1
+
+            if book_count == book_quantity:
+                break
+    
+    return chart_imgs
 # Gerar grid de imagens
 def create_grid(columns, lines, chart_imgs):
     new_size = (419, 633)
@@ -107,12 +167,14 @@ def create_grid(columns, lines, chart_imgs):
 
 user_id = input("input your profile id: ")
 
-url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:2024/page:1/limit:1/"
+year = datetime.now().year
+
+url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 }
 
-new_url = mock_first_page(url, headers, user_id)
+new_url = mock_first_page(url, headers, user_id, year)
 
 response = requests.get(new_url, headers=headers)
 
@@ -122,51 +184,19 @@ if response.status_code == 200:
     response_json = response.json()
     # with open("log.json", "w", encoding="utf-8") as file:
     #      json.dump(response_json, file, indent=4, ensure_ascii=False)
-
+    
     columns, lines = map(int, input("Selecione o tamanho do grid:").split())
     book_quantity = columns * lines
 
-    inicio = time.time()
     try:
-        chart_imgs = {}
-        total_books = response_json["paging"]["total"]
-        # Algoritmo para varrer JSON
-        for i in range(total_books - 1,  total_books - book_quantity - 1, -1):
-            target_element = response_json["response"][i]
+        inicio = time.time()
 
-            book_edition = target_element["edicao"]
-            book_name = book_edition["titulo"]
-            book_img = book_edition["capa_grande"]
+        chart_imgs = create_byte_image_array(response_json, book_quantity, year, user_id)
 
-            response_img = requests.get(book_img, headers=headers)
-
-            # BytesIO converte para que Image consiga ler a requisição
-            book_img_byte = Image.open(BytesIO(response_img.content))
-
-            # Melhorar qualidade
-            # book_img_byte = improve_image_quality(book_img_byte)
-
-            new_size = (419, 633)
-            book_img_resized = book_img_byte.resize(new_size, Image.Resampling.LANCZOS)
-
-
-            book_img_resized = apply_gradient(book_img_resized)
-            paste_data(target_element, book_img_resized)
-
-            book_img_resized = book_img_resized.convert("RGB")
-
-            # Salva dinamicamente a imagem em bytes em um array
-            img_byte_value = io.BytesIO()
-
-            book_img_resized.save(img_byte_value, format="JPEG")
-            chart_imgs[f"{book_name}"] = img_byte_value.getvalue()
-
-        #Montar grid
         create_grid(columns, lines, chart_imgs)
 
         fim = time.time()
         
+        print(fim - inicio)
     except Exception as e:
         print(e)
-
-    print(fim - inicio)
