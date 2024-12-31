@@ -6,13 +6,16 @@ from io import BytesIO
 
 # Colocar todos os livros lidos em uma única página
 def mock_first_page(url, headers, user_id):
-    response = requests.get(url, headers=headers)
-    response_json = response.json()
-    total_books = response_json["paging"]["total"]
+    try:
+        response = requests.get(url, headers=headers)
+        response_json = response.json()
+        total_books = response_json["paging"]["total"]
 
-    new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:2024/page:1/limit:{total_books}/"
+        new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:2024/page:1/limit:{total_books}/"
 
-    return new_url
+        return new_url
+    except Exception(e):
+        print(e)
 
 # Gerar grid de imagens
 def create_grid(columns, lines, chart_imgs):
@@ -49,16 +52,40 @@ def paste_data(book_json, book_img):
     stars_paths = ["static/images/star.png", "static/images/half-star.png"]
 
     for i in range(int(book_rating)):
-        img_star = Image.open("static/images/star-2.png").convert("RGBA")
+        img_star = Image.open("static/images/star-3.png").convert("RGBA")
         img_star = img_star.resize((12, 12))
 
-        book_img.paste(img_star, (3 + (i * 12), 135), img_star)
+        book_img.paste(img_star, (3 + (i * 14), 135), img_star)
     
     if type(book_rating) == float:
-        img_half_star = Image.open("static/images/half-star-2.png").convert("RGBA")
+        img_half_star = Image.open("static/images/half-star-3.png").convert("RGBA")
         img_half_star = img_half_star.resize((12, 12))
-        book_img.paste(img_half_star, (3 + ((i + 1) * 12), 135), img_half_star)
-    
+
+        if book_rating < 1:
+            book_img.paste(img_half_star, (3, 135), img_half_star)
+        else:
+            book_img.paste(img_half_star, (3 + ((i + 1) * 14), 135), img_half_star)
+
+def apply_gradient(book_img):
+    width = book_img.width
+    height = book_img.height
+
+    book_img = book_img.convert("RGBA")
+
+    gradient = Image.new("L", (width, height), color=0)  # Modo 'L' é para 8-bit (escala de cinza)
+    draw = ImageDraw.Draw(gradient)
+
+    gradient_height = int(height * 0.3)
+
+    for y in range(gradient_height):
+        opacity = int(245 * (y / gradient_height))
+        draw.line([(0, height - gradient_height + y), (width, height - gradient_height + y)], fill=opacity)
+
+        gradient_alpha = Image.new("RGBA", (width, height), color=(0, 0, 0, 0))
+        gradient_alpha.putalpha(gradient)
+
+    return Image.alpha_composite(book_img, gradient_alpha)
+
 user_id = input("input your profile id: ")
 
 url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:2024/page:1/limit:1/"
@@ -94,13 +121,17 @@ if response.status_code == 200:
             response_img = requests.get(book_img, headers=headers)
 
             # BytesIO converte para que Image consiga ler a requisição
-            img_book = Image.open(BytesIO(response_img.content))
+            book_img_byte = Image.open(BytesIO(response_img.content))
 
             new_size = (100, 150)
-            book_img_resized = img_book.resize(new_size, Image.Resampling.LANCZOS)
+            book_img_resized = book_img_byte.resize(new_size, Image.Resampling.LANCZOS)
 
 
+            book_img_resized = apply_gradient(book_img_resized)
             paste_data(target_element, book_img_resized)
+
+            book_img_resized = book_img_resized.convert("RGB")
+
             # Salva dinamicamente a imagem em bytes em um array
             img_byte_value = io.BytesIO()
 
