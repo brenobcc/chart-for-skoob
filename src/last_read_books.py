@@ -1,6 +1,6 @@
 import requests
 import json
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import io
 from io import BytesIO
 
@@ -24,7 +24,7 @@ def create_grid(columns, lines, chart_imgs):
     book_count = 0
 
     grid = Image.new("RGB", (chart_width, chart_height), (255, 255, 255))
-    
+
     for book, image_bytes in chart_imgs.items():
 
         if book_count >= book_quantity:
@@ -42,6 +42,23 @@ def create_grid(columns, lines, chart_imgs):
 
     grid.save(f"grid{columns}x{lines}.jpg")
 
+def paste_data(book_json, book_img):
+    # Rating
+    book_rating = book_json["ranking"]
+
+    stars_paths = ["static/images/star.png", "static/images/half-star.png"]
+
+    for i in range(int(book_rating)):
+        img_star = Image.open("static/images/star-2.png").convert("RGBA")
+        img_star = img_star.resize((12, 12))
+
+        book_img.paste(img_star, (3 + (i * 12), 135), img_star)
+    
+    if type(book_rating) == float:
+        img_half_star = Image.open("static/images/half-star-2.png").convert("RGBA")
+        img_half_star = img_half_star.resize((12, 12))
+        book_img.paste(img_half_star, (3 + ((i + 1) * 12), 135), img_half_star)
+    
 user_id = input("input your profile id: ")
 
 url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:2024/page:1/limit:1/"
@@ -82,6 +99,8 @@ if response.status_code == 200:
             new_size = (100, 150)
             book_img_resized = img_book.resize(new_size, Image.Resampling.LANCZOS)
 
+
+            paste_data(target_element, book_img_resized)
             # Salva dinamicamente a imagem em bytes em um array
             img_byte_value = io.BytesIO()
 
