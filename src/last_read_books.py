@@ -20,20 +20,18 @@ def mock_first_page(url, headers, user_id):
 def improve_image_quality(book_img):
     # Aumentar a nitidez
     enhancer = ImageEnhance.Sharpness(book_img)
-    book_img = enhancer.enhance(1.5)  # Ajuste o fator de nitidez conforme necessário
+    book_img = enhancer.enhance(1.5)
 
     # Aumentar o contraste
     enhancer = ImageEnhance.Contrast(book_img)
-    book_img = enhancer.enhance(1)  # Ajuste o fator de contraste conforme necessário
+    book_img = enhancer.enhance(1)
 
     # Aumentar a saturação
     enhancer = ImageEnhance.Color(book_img)
-    book_img = enhancer.enhance(1)  # Ajuste a saturação conforme necessário
+    book_img = enhancer.enhance(1)
 
     # Aplicar um filtro de nitidez adicional (opcional)
     book_img = book_img.filter(ImageFilter.SHARPEN)
-
-    book_img = book_img.filter(ImageFilter.GaussianBlur(radius=2))
 
     return book_img
 
@@ -45,18 +43,18 @@ def paste_data(book_json, book_img):
 
     for i in range(int(book_rating)):
         img_star = Image.open("static/images/star-3.png").convert("RGBA")
-        img_star = img_star.resize((12, 12))
+        img_star = img_star.resize((44, 44))
 
-        book_img.paste(img_star, (3 + (i * 14), 135), img_star)
+        book_img.paste(img_star, (8 + (i * 50), 575), img_star)
     
     if type(book_rating) == float:
         img_half_star = Image.open("static/images/half-star-3.png").convert("RGBA")
-        img_half_star = img_half_star.resize((12, 12))
+        img_half_star = img_half_star.resize((44, 44))
 
         if book_rating < 1:
-            book_img.paste(img_half_star, (3, 135), img_half_star)
+            book_img.paste(img_half_star, (8, 575), img_half_star)
         else:
-            book_img.paste(img_half_star, (3 + ((i + 1) * 14), 135), img_half_star)
+            book_img.paste(img_half_star, (8 + ((i + 1) * 50), 575), img_half_star)
 
 def apply_gradient(book_img):
     width = book_img.width
@@ -80,7 +78,7 @@ def apply_gradient(book_img):
 
 # Gerar grid de imagens
 def create_grid(columns, lines, chart_imgs):
-    new_size = (100, 150)
+    new_size = (419, 633)
 
     chart_width = new_size[0] * columns
     chart_height = new_size[1] * lines
@@ -121,8 +119,8 @@ print(response.status_code)
 
 if response.status_code == 200:
     response_json = response.json()
-    with open("log.json", "w", encoding="utf-8") as file:
-         json.dump(response_json, file, indent=4, ensure_ascii=False)
+    # with open("log.json", "w", encoding="utf-8") as file:
+    #      json.dump(response_json, file, indent=4, ensure_ascii=False)
 
     columns, lines = map(int, input("Selecione o tamanho do grid:").split())
     book_quantity = columns * lines
@@ -146,7 +144,7 @@ if response.status_code == 200:
             # Melhorar qualidade
             book_img_byte = improve_image_quality(book_img_byte)
 
-            new_size = (100, 150)
+            new_size = (419, 633)
             book_img_resized = book_img_byte.resize(new_size, Image.Resampling.LANCZOS)
 
 
