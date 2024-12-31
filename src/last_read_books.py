@@ -13,7 +13,35 @@ def mock_first_page(url, headers, user_id):
     new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:2024/page:1/limit:{total_books}/"
 
     return new_url
+
+# Gerar grid de imagens
+def create_grid(columns, lines, chart_imgs):
+    new_size = (100, 150)
+
+    chart_width = new_size[0] * columns
+    chart_height = new_size[1] * lines
+
+    book_count = 0
+
+    grid = Image.new("RGB", (chart_width, chart_height), (255, 255, 255))
     
+    for book, image_bytes in chart_imgs.items():
+
+        if book_count >= book_quantity:
+            break
+            
+        image = Image.open(io.BytesIO(image_bytes))
+        image = image.convert("RGB")
+
+        x = (book_count % columns) * new_size[0]
+        y = (book_count // columns) * new_size[1]
+
+        grid.paste(image, (x, y))
+
+        book_count += 1
+
+    grid.save(f"grid{columns}x{lines}.jpg")
+
 user_id = input("input your profile id: ")
 
 url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:2024/page:1/limit:1/"
@@ -61,29 +89,7 @@ if response.status_code == 200:
             chart_imgs[f"{book_name}"] = img_byte_value.getvalue()
 
         #Montar grid
-        chart_width = 100 * columns
-        chart_height = 150 * lines
-        new_size = (100, 150)
-
-        book_count = 0
-
-        grid = Image.new("RGB", (chart_width, chart_height), (255, 255, 255))
-        for book, image_bytes in chart_imgs.items():
-
-            if book_count >= book_quantity:
-                break
-            
-            image = Image.open(io.BytesIO(image_bytes))
-            image = image.convert("RGB")
-
-            x = (book_count % columns) * new_size[0]
-            y = (book_count // columns) * new_size[1]
-
-            grid.paste(image, (x, y))
-
-            book_count += 1
-
-        grid.save(f"grid{columns}x{lines}.jpg")
-    
+        create_grid(columns, lines, chart_imgs)
+        
     except Exception as e:
         print(e)
