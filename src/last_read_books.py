@@ -1,0 +1,145 @@
+import requests
+import json
+from PIL import Image, ImageDraw, ImageFont
+import io
+from io import BytesIO
+
+# Colocar todos os livros lidos em uma única página
+def mock_first_page(url, headers, user_id):
+    try:
+        response = requests.get(url, headers=headers)
+        response_json = response.json()
+        total_books = response_json["paging"]["total"]
+
+        new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:2024/page:1/limit:{total_books}/"
+
+        return new_url
+    except Exception(e):
+        print(e)
+
+# Gerar grid de imagens
+def create_grid(columns, lines, chart_imgs):
+    new_size = (100, 150)
+
+    chart_width = new_size[0] * columns
+    chart_height = new_size[1] * lines
+
+    book_count = 0
+
+    grid = Image.new("RGB", (chart_width, chart_height), (255, 255, 255))
+
+    for book, image_bytes in chart_imgs.items():
+
+        if book_count >= book_quantity:
+            break
+            
+        image = Image.open(io.BytesIO(image_bytes))
+        image = image.convert("RGB")
+
+        x = (book_count % columns) * new_size[0]
+        y = (book_count // columns) * new_size[1]
+
+        grid.paste(image, (x, y))
+
+        book_count += 1
+
+    grid.save(f"grid{columns}x{lines}.jpg")
+
+def paste_data(book_json, book_img):
+    # Rating
+    book_rating = book_json["ranking"]
+
+    stars_paths = ["static/images/star.png", "static/images/half-star.png"]
+
+    for i in range(int(book_rating)):
+        img_star = Image.open("static/images/star-3.png").convert("RGBA")
+        img_star = img_star.resize((12, 12))
+
+        book_img.paste(img_star, (3 + (i * 14), 135), img_star)
+    
+    if type(book_rating) == float:
+        img_half_star = Image.open("static/images/half-star-3.png").convert("RGBA")
+        img_half_star = img_half_star.resize((12, 12))
+
+        if book_rating < 1:
+            book_img.paste(img_half_star, (3, 135), img_half_star)
+        else:
+            book_img.paste(img_half_star, (3 + ((i + 1) * 14), 135), img_half_star)
+
+def apply_gradient(book_img):
+    width = book_img.width
+    height = book_img.height
+
+    book_img = book_img.convert("RGBA")
+
+    gradient = Image.new("L", (width, height), color=0)  # Modo 'L' é para 8-bit (escala de cinza)
+    draw = ImageDraw.Draw(gradient)
+
+    gradient_height = int(height * 0.3)
+
+    for y in range(gradient_height):
+        opacity = int(245 * (y / gradient_height))
+        draw.line([(0, height - gradient_height + y), (width, height - gradient_height + y)], fill=opacity)
+
+        gradient_alpha = Image.new("RGBA", (width, height), color=(0, 0, 0, 0))
+        gradient_alpha.putalpha(gradient)
+
+    return Image.alpha_composite(book_img, gradient_alpha)
+
+user_id = input("input your profile id: ")
+
+url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:2024/page:1/limit:1/"
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+}
+
+new_url = mock_first_page(url, headers, user_id)
+
+response = requests.get(new_url, headers=headers)
+
+print(response.status_code)
+
+if response.status_code == 200:
+    response_json = response.json()
+    # with open("logs/log.json", "w", encoding="utf-8") as file:
+    #     json.dump(response_json, file, indent=4, ensure_ascii=False)
+
+    columns, lines = map(int, input("Selecione o tamanho do grid:").split())
+    book_quantity = columns * lines
+
+    try:
+        chart_imgs = {}
+        total_books = response_json["paging"]["total"]
+        # Algoritmo para varrer JSON
+        for i in range(total_books - 1,  total_books - book_quantity - 1, -1):
+            target_element = response_json["response"][i]
+
+            book_edition = target_element["edicao"]
+            book_name = book_edition["titulo"]
+            book_img = book_edition["capa_pequena"]
+
+            response_img = requests.get(book_img, headers=headers)
+
+            # BytesIO converte para que Image consiga ler a requisição
+            book_img_byte = Image.open(BytesIO(response_img.content))
+
+            new_size = (100, 150)
+            book_img_resized = book_img_byte.resize(new_size, Image.Resampling.LANCZOS)
+
+
+            book_img_resized = apply_gradient(book_img_resized)
+            paste_data(target_element, book_img_resized)
+
+            book_img_resized = book_img_resized.convert("RGB")
+
+            # Salva dinamicamente a imagem em bytes em um array
+            img_byte_value = io.BytesIO()
+
+            book_img_resized.save(img_byte_value, format="JPEG")
+            chart_imgs[f"{book_name}"] = img_byte_value.getvalue()
+
+        #Montar grid
+        create_grid(columns, lines, chart_imgs)
+        
+    except Exception as e:
+        print(e)
