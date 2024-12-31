@@ -65,10 +65,10 @@ def apply_gradient(book_img):
     gradient = Image.new("L", (width, height), color=0)  # Modo 'L' é para 8-bit (escala de cinza)
     draw = ImageDraw.Draw(gradient)
 
-    gradient_height = int(height * 0.3)
+    gradient_height = int(height * 0.25)
 
     for y in range(gradient_height):
-        opacity = int(245 * (y / gradient_height))
+        opacity = int(180 * (y / gradient_height))
         draw.line([(0, height - gradient_height + y), (width, height - gradient_height + y)], fill=opacity)
 
         gradient_alpha = Image.new("RGBA", (width, height), color=(0, 0, 0, 0))
@@ -142,7 +142,7 @@ if response.status_code == 200:
             book_img_byte = Image.open(BytesIO(response_img.content))
 
             # Melhorar qualidade
-            book_img_byte = improve_image_quality(book_img_byte)
+            # book_img_byte = improve_image_quality(book_img_byte)
 
             new_size = (419, 633)
             book_img_resized = book_img_byte.resize(new_size, Image.Resampling.LANCZOS)
