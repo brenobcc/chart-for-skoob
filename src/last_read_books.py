@@ -1,6 +1,6 @@
 import requests
 import json
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 import io
 from io import BytesIO
 
@@ -17,33 +17,25 @@ def mock_first_page(url, headers, user_id):
     except Exception(e):
         print(e)
 
-# Gerar grid de imagens
-def create_grid(columns, lines, chart_imgs):
-    new_size = (100, 150)
+def improve_image_quality(book_img):
+    # Aumentar a nitidez
+    enhancer = ImageEnhance.Sharpness(book_img)
+    book_img = enhancer.enhance(1.5)  # Ajuste o fator de nitidez conforme necessário
 
-    chart_width = new_size[0] * columns
-    chart_height = new_size[1] * lines
+    # Aumentar o contraste
+    enhancer = ImageEnhance.Contrast(book_img)
+    book_img = enhancer.enhance(1)  # Ajuste o fator de contraste conforme necessário
 
-    book_count = 0
+    # Aumentar a saturação
+    enhancer = ImageEnhance.Color(book_img)
+    book_img = enhancer.enhance(1)  # Ajuste a saturação conforme necessário
 
-    grid = Image.new("RGB", (chart_width, chart_height), (255, 255, 255))
+    # Aplicar um filtro de nitidez adicional (opcional)
+    book_img = book_img.filter(ImageFilter.SHARPEN)
 
-    for book, image_bytes in chart_imgs.items():
+    book_img = book_img.filter(ImageFilter.GaussianBlur(radius=2))
 
-        if book_count >= book_quantity:
-            break
-            
-        image = Image.open(io.BytesIO(image_bytes))
-        image = image.convert("RGB")
-
-        x = (book_count % columns) * new_size[0]
-        y = (book_count // columns) * new_size[1]
-
-        grid.paste(image, (x, y))
-
-        book_count += 1
-
-    grid.save(f"grid{columns}x{lines}.jpg")
+    return book_img
 
 def paste_data(book_json, book_img):
     # Rating
@@ -86,6 +78,34 @@ def apply_gradient(book_img):
 
     return Image.alpha_composite(book_img, gradient_alpha)
 
+# Gerar grid de imagens
+def create_grid(columns, lines, chart_imgs):
+    new_size = (100, 150)
+
+    chart_width = new_size[0] * columns
+    chart_height = new_size[1] * lines
+
+    book_count = 0
+
+    grid = Image.new("RGB", (chart_width, chart_height), (255, 255, 255))
+
+    for book, image_bytes in chart_imgs.items():
+
+        if book_count >= book_quantity:
+            break
+            
+        image = Image.open(io.BytesIO(image_bytes))
+        image = image.convert("RGB")
+
+        x = (book_count % columns) * new_size[0]
+        y = (book_count // columns) * new_size[1]
+
+        grid.paste(image, (x, y))
+
+        book_count += 1
+
+    grid.save(f"grid{columns}x{lines}.jpg")
+
 user_id = input("input your profile id: ")
 
 url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:2024/page:1/limit:1/"
@@ -101,8 +121,8 @@ print(response.status_code)
 
 if response.status_code == 200:
     response_json = response.json()
-    # with open("logs/log.json", "w", encoding="utf-8") as file:
-    #     json.dump(response_json, file, indent=4, ensure_ascii=False)
+    with open("log.json", "w", encoding="utf-8") as file:
+         json.dump(response_json, file, indent=4, ensure_ascii=False)
 
     columns, lines = map(int, input("Selecione o tamanho do grid:").split())
     book_quantity = columns * lines
@@ -116,12 +136,15 @@ if response.status_code == 200:
 
             book_edition = target_element["edicao"]
             book_name = book_edition["titulo"]
-            book_img = book_edition["capa_pequena"]
+            book_img = book_edition["capa_grande"]
 
             response_img = requests.get(book_img, headers=headers)
 
             # BytesIO converte para que Image consiga ler a requisição
             book_img_byte = Image.open(BytesIO(response_img.content))
+
+            # Melhorar qualidade
+            book_img_byte = improve_image_quality(book_img_byte)
 
             new_size = (100, 150)
             book_img_resized = book_img_byte.resize(new_size, Image.Resampling.LANCZOS)
