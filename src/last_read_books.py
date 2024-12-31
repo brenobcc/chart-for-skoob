@@ -3,6 +3,7 @@ import json
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 import io
 from io import BytesIO
+import time
 
 # Colocar todos os livros lidos em uma única página
 def mock_first_page(url, headers, user_id):
@@ -125,6 +126,7 @@ if response.status_code == 200:
     columns, lines = map(int, input("Selecione o tamanho do grid:").split())
     book_quantity = columns * lines
 
+    inicio = time.time()
     try:
         chart_imgs = {}
         total_books = response_json["paging"]["total"]
@@ -161,6 +163,10 @@ if response.status_code == 200:
 
         #Montar grid
         create_grid(columns, lines, chart_imgs)
+
+        fim = time.time()
         
     except Exception as e:
         print(e)
+
+    print(fim - inicio)
