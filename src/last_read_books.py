@@ -18,7 +18,10 @@ def mockFirstPageResponse(user_id, year):
         response_json = response.json()
 
         if response_json["response"] == []:
-            return mockFirstPageResponse(user_id, year - 1)
+            global previous_year
+            previous_year = year - 1
+
+            return mockFirstPageResponse(user_id, previous_year)
 
         total_books = response_json["paging"]["total"]
 
@@ -26,7 +29,8 @@ def mockFirstPageResponse(user_id, year):
 
         new_response = requests.get(new_url, headers=headers)
         return new_response
-    except Exception(e):
+
+    except Exception as e:
         print(e)
 
 def improveImageQuality(book_img):
@@ -195,6 +199,8 @@ current_year = datetime.now().year
 
 response = mockFirstPageResponse(user_id, current_year)
 
+current_year = previous_year
+
 print(response.status_code)
 
 if response.status_code == 200:
@@ -208,9 +214,9 @@ if response.status_code == 200:
     try:
         inicio = time.time()
 
-        chart_imgs = create_byte_image_array(response_json, book_quantity, year, user_id)
+        chart_imgs = create_byte_image_array(response_json, book_quantity, current_year, user_id)
 
-        create_grid(columns, lines, chart_imgs)
+        createGrid(columns, lines, chart_imgs)
 
         fim = time.time()
         
