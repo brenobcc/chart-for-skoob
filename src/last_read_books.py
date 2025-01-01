@@ -107,12 +107,32 @@ def applyGradient(book_img):
     return Image.alpha_composite(book_img, gradient_alpha)
 
 def previousYearJson(user_id, year):
-    year -= 1
     response = mockFirstPageResponse(user_id, year)
 
     return response.json()
 
-def createByteImageArray(response_json, book_quantity):
+def processImage(book_json, book_edition):
+        book_img = book_edition["capa_grande"]
+
+        response_img = requests.get(book_img, headers=headers)
+
+        # BytesIO converte para que Image consiga ler a requisição
+        book_img_byte = Image.open(BytesIO(response_img.content))
+
+        # Melhorar qualidade
+        # book_img_byte = improve_image_quality(book_img_byte)
+
+        new_size = (419, 633)
+
+        book_img_resized = book_img_byte.resize(new_size, Image.Resampling.LANCZOS)
+
+        book_img_resized = applyGradient(book_img_resized)
+        book_img_resized = pasteStar(book_json, book_img_resized)
+        book_img_resized = book_img_resized.convert("RGB")
+
+        return book_img_resized
+
+def createByteImageArray(current_year, response_json, book_quantity):
     chart_imgs = {}
     total_books_json = response_json["paging"]["total"]
 
@@ -121,6 +141,7 @@ def createByteImageArray(response_json, book_quantity):
     while book_count < book_quantity:
 
         if total_books_json <= book_count:
+            current_year -= 1
             response_json = previousYearJson(user_id, current_year)
 
             total_books_json = response_json["paging"]["total"]
@@ -133,29 +154,13 @@ def createByteImageArray(response_json, book_quantity):
 
             book_edition = target_element["edicao"]
             book_name = book_edition["titulo"]
-            book_img = book_edition["capa_grande"]
+    
+            book_img = processImage(target_element, book_edition)
 
-            response_img = requests.get(book_img, headers=headers)
-
-            # BytesIO converte para que Image consiga ler a requisição
-            book_img_byte = Image.open(BytesIO(response_img.content))
-
-            # Melhorar qualidade
-            # book_img_byte = improve_image_quality(book_img_byte)
-
-            new_size = (419, 633)
-            book_img_resized = book_img_byte.resize(new_size, Image.Resampling.LANCZOS)
-
-
-            book_img_resized = applyGradient(book_img_resized)
-            book_img_resized = pasteStar(target_element, book_img_resized)
-
-            book_img_resized = book_img_resized.convert("RGB")
-
-                # Salva dinamicamente a imagem em bytes em um array
+            # Salva dinamicamente a imagem em bytes em um array
             img_byte_value = io.BytesIO()
 
-            book_img_resized.save(img_byte_value, format="JPEG")
+            book_img.save(img_byte_value, format="JPEG")
             chart_imgs[f"{book_count}-{book_name}"] = img_byte_value.getvalue()
 
             book_count += 1
@@ -199,7 +204,10 @@ current_year = datetime.now().year
 
 response = mockFirstPageResponse(user_id, current_year)
 
-current_year = previous_year
+try:
+    current_year = previous_year
+except NameError:
+    print(f"Em {current_year} há registros")
 
 print(response.status_code)
 
@@ -214,7 +222,7 @@ if response.status_code == 200:
     try:
         inicio = time.time()
 
-        chart_imgs = createByteImageArray(response_json, book_quantity)
+        chart_imgs = createByteImageArray(current_year, response_json, book_quantity)
 
         createGrid(columns, lines, chart_imgs)
 
