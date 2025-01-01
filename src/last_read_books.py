@@ -6,6 +6,15 @@ from io import BytesIO
 import time
 from datetime import datetime
 
+def totalReadBooks(user_id):
+    url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/shelf_id:1/page:1/limit:1/"
+
+    response = requests.get(url, headers=headers)
+    response_json = response.json()
+    total_read_books = response_json["paging"]["total"]
+
+    return total_read_books
+
 def mockFirstPageResponse(user_id, year):
     try:
         url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
@@ -111,7 +120,7 @@ def previousYearJson(user_id, year):
 
     return response.json()
 
-def processImage(book_json, book_edition):
+def processImage(book_json, book_edition, paste_star):
         book_img = book_edition["capa_grande"]
 
         response_img = requests.get(book_img, headers=headers)
@@ -126,13 +135,15 @@ def processImage(book_json, book_edition):
 
         book_img_resized = book_img_byte.resize(new_size, Image.Resampling.LANCZOS)
 
-        book_img_resized = applyGradient(book_img_resized)
-        book_img_resized = pasteStar(book_json, book_img_resized)
+        if paste_star == True:
+            book_img_resized = applyGradient(book_img_resized)
+            book_img_resized = pasteStar(book_json, book_img_resized)
+
         book_img_resized = book_img_resized.convert("RGB")
 
         return book_img_resized
 
-def createByteImageArray(current_year, response_json, book_quantity):
+def createByteImageArray(current_year, response_json, book_quantity, paste_star):
     chart_imgs = {}
     total_books_json = response_json["paging"]["total"]
 
@@ -155,7 +166,9 @@ def createByteImageArray(current_year, response_json, book_quantity):
             book_edition = target_element["edicao"]
             book_name = book_edition["titulo"]
     
-            book_img = processImage(target_element, book_edition)
+            book_img = processImage(target_element, book_edition, paste_star)
+
+            
 
             # Salva dinamicamente a imagem em bytes em um array
             img_byte_value = io.BytesIO()
@@ -219,10 +232,16 @@ if response.status_code == 200:
     columns, lines = map(int, input("Selecione o tamanho do grid:").split())
     book_quantity = columns * lines
 
+    total_read_books = totalReadBooks(user_id)
+    if total_read_books < book_quantity:
+        exit(f"Você tem apenas {total_read_books} livros lidos.")
+
+    paste_star = False
+
     try:
         inicio = time.time()
 
-        chart_imgs = createByteImageArray(current_year, response_json, book_quantity)
+        chart_imgs = createByteImageArray(current_year, response_json, book_quantity, paste_star)
 
         createGrid(columns, lines, chart_imgs)
 
