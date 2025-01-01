@@ -20,6 +20,7 @@ def mock_first_page(url, headers, user_id, year):
         print(e)
 
 def improve_image_quality(book_img):
+
     # Aumentar a nitidez
     enhancer = ImageEnhance.Sharpness(book_img)
     book_img = enhancer.enhance(1.5)
@@ -37,26 +38,37 @@ def improve_image_quality(book_img):
 
     return book_img
 
-def paste_data(book_json, book_img):
-    # Rating
+def openStar(star_type):
+    # Estrela cheia
+    if star_type == 0:
+        img_star = Image.open("static/images/star-3.png").convert("RGBA")
+        return img_star.resize((44, 44))
+    
+    # Meia estrela
+    img_star = Image.open("static/images/half-star-3.png").convert("RGBA")
+    return img_star.resize((44, 44))
+
+def pasteStar(book_json, book_img):
     book_rating = book_json["ranking"]
 
-    stars_paths = ["static/images/star.png", "static/images/half-star.png"]
+    if book_rating == 0:
+        return book_img
+
+    if book_rating == 0.5:
+        img_half_star = openStar(1)
+        book_img.paste(img_half_star, (8, 575), img_half_star)
+
+        return book_img
 
     for i in range(int(book_rating)):
-        img_star = Image.open("static/images/star-3.png").convert("RGBA")
-        img_star = img_star.resize((44, 44))
-
+        img_star = openStar(0)
         book_img.paste(img_star, (8 + (i * 50), 575), img_star)
     
     if type(book_rating) == float:
-        img_half_star = Image.open("static/images/half-star-3.png").convert("RGBA")
-        img_half_star = img_half_star.resize((44, 44))
-
-        if book_rating < 1:
-            book_img.paste(img_half_star, (8, 575), img_half_star)
-        else:
-            book_img.paste(img_half_star, (8 + ((i + 1) * 50), 575), img_half_star)
+        img_half_star = openStar(1)
+        book_img.paste(img_half_star, (8 + ((i + 1) * 50), 575), img_half_star)
+    
+    return book_img
 
 def apply_gradient(book_img):
     width = book_img.width
@@ -121,7 +133,7 @@ def create_byte_image_array(response_json, book_quantity, year, user_id):
 
 
             book_img_resized = apply_gradient(book_img_resized)
-            paste_data(target_element, book_img_resized)
+            book_img_resized = pasteStar(target_element, book_img_resized)
 
             book_img_resized = book_img_resized.convert("RGB")
 
