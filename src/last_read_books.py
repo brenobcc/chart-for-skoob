@@ -7,19 +7,29 @@ import time
 from datetime import datetime
 
 # Colocar todos os livros lidos em uma única página
-def mock_first_page(url, headers, user_id, year):
+def mockFirstPageResponse(user_id, year):
     try:
+        url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        }
+
         response = requests.get(url, headers=headers)
         response_json = response.json()
+
+        if response_json["response"] == []:
+            return mockFirstPageResponse(user_id, year - 1)
+
         total_books = response_json["paging"]["total"]
 
         new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:{total_books}/"
 
-        return new_url
+        new_response = requests.get(new_url, headers=headers)
+        return new_response
     except Exception(e):
         print(e)
 
-def improve_image_quality(book_img):
+def improveImageQuality(book_img):
 
     # Aumentar a nitidez
     enhancer = ImageEnhance.Sharpness(book_img)
@@ -70,19 +80,20 @@ def pasteStar(book_json, book_img):
     
     return book_img
 
-def apply_gradient(book_img):
+def applyGradient(book_img):
     width = book_img.width
     height = book_img.height
 
     book_img = book_img.convert("RGBA")
 
-    gradient = Image.new("L", (width, height), color=0)  # Modo 'L' é para 8-bit (escala de cinza)
+    gradient = Image.new("L", (width, height), color=0)  #'L' (greyscale)
     draw = ImageDraw.Draw(gradient)
 
-    gradient_height = int(height * 0.25)
+    gradient_height = int(height * 0.30)
 
+    # Apply gradient lines
     for y in range(gradient_height):
-        opacity = int(180 * (y / gradient_height))
+        opacity = int(240 * (y / gradient_height))
         draw.line([(0, height - gradient_height + y), (width, height - gradient_height + y)], fill=opacity)
 
         gradient_alpha = Image.new("RGBA", (width, height), color=(0, 0, 0, 0))
@@ -132,7 +143,7 @@ def create_byte_image_array(response_json, book_quantity, year, user_id):
             book_img_resized = book_img_byte.resize(new_size, Image.Resampling.LANCZOS)
 
 
-            book_img_resized = apply_gradient(book_img_resized)
+            book_img_resized = applyGradient(book_img_resized)
             book_img_resized = pasteStar(target_element, book_img_resized)
 
             book_img_resized = book_img_resized.convert("RGB")
@@ -149,8 +160,9 @@ def create_byte_image_array(response_json, book_quantity, year, user_id):
                 break
     
     return chart_imgs
+
 # Gerar grid de imagens
-def create_grid(columns, lines, chart_imgs):
+def createGrid(columns, lines, chart_imgs):
     new_size = (419, 633)
 
     chart_width = new_size[0] * columns
@@ -179,16 +191,9 @@ def create_grid(columns, lines, chart_imgs):
 
 user_id = input("input your profile id: ")
 
-year = 2024
+current_year = datetime.now().year
 
-url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-}
-
-new_url = mock_first_page(url, headers, user_id, year)
-
-response = requests.get(new_url, headers=headers)
+response = mockFirstPageResponse(user_id, current_year)
 
 print(response.status_code)
 
