@@ -143,7 +143,7 @@ def processImage(book_json, book_edition, paste_star):
 
         return book_img_resized
 
-def createByteImageArray(current_year, response_json, book_quantity, paste_star):
+def createByteImageArray(user_id, response_json, book_quantity, current_year, paste_star):
     chart_imgs = {}
     total_books_json = response_json["paging"]["total"]
 
@@ -190,6 +190,8 @@ def createGrid(columns, lines, chart_imgs):
     chart_width = new_size[0] * columns
     chart_height = new_size[1] * lines
 
+    book_quantity = columns * lines
+
     book_count = 0
 
     grid = Image.new("RGB", (chart_width, chart_height), (255, 255, 255))
@@ -209,44 +211,4 @@ def createGrid(columns, lines, chart_imgs):
 
         book_count += 1
 
-    grid.save(f"grid{columns}x{lines}.jpg")
-
-user_id = input("input your profile id: ")
-
-current_year = datetime.now().year
-
-response = mockFirstPageResponse(user_id, current_year)
-
-try:
-    current_year = previous_year
-except NameError:
-    print(f"Em {current_year} há registros")
-
-print(response.status_code)
-
-if response.status_code == 200:
-    response_json = response.json()
-    # with open("log.json", "w", encoding="utf-8") as file:
-    #      json.dump(response_json, file, indent=4, ensure_ascii=False)
-    
-    columns, lines = map(int, input("Selecione o tamanho do grid:").split())
-    book_quantity = columns * lines
-
-    total_read_books = totalReadBooks(user_id)
-    if total_read_books < book_quantity:
-        exit(f"Você tem apenas {total_read_books} livros lidos.")
-
-    paste_star = False
-
-    try:
-        inicio = time.time()
-
-        chart_imgs = createByteImageArray(current_year, response_json, book_quantity, paste_star)
-
-        createGrid(columns, lines, chart_imgs)
-
-        fim = time.time()
-        
-        print(fim - inicio)
-    except Exception as e:
-        print(e)
+    return grid

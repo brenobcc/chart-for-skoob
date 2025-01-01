@@ -10,12 +10,14 @@
 <body>
     <h1>Skoob Chart</h1>
 
-    <button id="btn_results">Generate Chart</button>
+    <form method="POST">
+        <input type="text" name="user_id" placeholder="Digite o seu código de usuário">
+        <button type="submit">Gerar Chart</button>
+    </form>
 
-    <div id="chart_img">
-
-    </div>
-
-    <script src="static/script.js"></script>
+    {% if request.method == 'POST' %}
+    <h2>Imagem Gerada:</h2>
+    <img src="{{ url_for('homepage') }}" alt="Imagem Gerada">
+    {% endif %}
 </body>
 </html>
