@@ -6,10 +6,11 @@ from io import BytesIO
 import time
 from datetime import datetime
 
-# Colocar todos os livros lidos em uma única página
 def mockFirstPageResponse(user_id, year):
     try:
         url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
+
+        global headers 
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
         }
@@ -105,7 +106,13 @@ def applyGradient(book_img):
 
     return Image.alpha_composite(book_img, gradient_alpha)
 
-def create_byte_image_array(response_json, book_quantity, year, user_id):
+def previousYearJson(user_id, year):
+    year -= 1
+    response = mockFirstPageResponse(user_id, year)
+
+    return response.json()
+
+def createByteImageArray(response_json, book_quantity):
     chart_imgs = {}
     total_books_json = response_json["paging"]["total"]
 
@@ -114,14 +121,7 @@ def create_byte_image_array(response_json, book_quantity, year, user_id):
     while book_count < book_quantity:
 
         if total_books_json <= book_count:
-            year -= 1
-            previous_year_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
-
-            previous_year_url = mock_first_page(previous_year_url, headers, user_id, year)
-
-            response = requests.get(previous_year_url, headers=headers)
-
-            response_json = response.json()
+            response_json = previousYearJson(user_id, current_year)
 
             total_books_json = response_json["paging"]["total"]
 
@@ -214,7 +214,7 @@ if response.status_code == 200:
     try:
         inicio = time.time()
 
-        chart_imgs = create_byte_image_array(response_json, book_quantity, current_year, user_id)
+        chart_imgs = createByteImageArray(response_json, book_quantity)
 
         createGrid(columns, lines, chart_imgs)
 
