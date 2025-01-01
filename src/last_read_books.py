@@ -129,7 +129,7 @@ def create_byte_image_array(response_json, book_quantity, year, user_id):
             img_byte_value = io.BytesIO()
 
             book_img_resized.save(img_byte_value, format="JPEG")
-            chart_imgs[f"{book_name}"] = img_byte_value.getvalue()
+            chart_imgs[f"{book_count}-{book_name}"] = img_byte_value.getvalue()
 
             book_count += 1
 
@@ -167,7 +167,7 @@ def create_grid(columns, lines, chart_imgs):
 
 user_id = input("input your profile id: ")
 
-year = datetime.now().year
+year = 2024
 
 url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
 headers = {
