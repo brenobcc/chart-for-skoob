@@ -1,5 +1,8 @@
-from flask import Flask, render_template, request
-from helpers.processor import startProcess
+from flask import Flask, render_template, request, send_file
+from helpers import startProcess
+from io import BytesIO
+import io
+import base64
 
 app = Flask(__name__)
 
@@ -9,12 +12,25 @@ def homepage():
         user_id = request.form["user_id"]
         column = int(request.form["column"])
         line = int(request.form["line"])
-
         paste_star = "paste_star" in request.form
+        
+        chart_img_grid = startProcess(user_id, column, line, paste_star)
+        
+        img_base64 = base64.b64encode(chart_img_grid.getvalue()).decode('utf-8')
 
-        return startProcess(user_id, column, line, paste_star)
+        return render_template("homepage.html", image_data=img_base64)
 
     return render_template("homepage.html")
+
+@app.route('/image')
+def serve_image():
+    image_data = request.args.get("image_data")
+    if image_data:
+        chart_img = io.BytesIO(image_data.encode('utf-8'))
+        chart_img.seek(0)
+        
+        return send_file(chart_img, mimetype='image/png', as_attachment=True, download_name="chart.png")
+    return "No image data found", 400
 
 if __name__ == "__main__":
     app.run(debug=True)

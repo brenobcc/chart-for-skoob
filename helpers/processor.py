@@ -37,7 +37,7 @@ def startProcess(user_id, columns, lines, paste_star):
             grid.save(grid_io, 'PNG')  # Salva a imagem no buffer em formato PNG
             grid_io.seek(0)  # Move o ponteiro para o início do buffer
 
-            return send_file(grid_io, mimetype='image/png', as_attachment=False, download_name='generated_image.png')
+            return grid_io
 
            # fim = time.time()
             

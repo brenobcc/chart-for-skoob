@@ -23,9 +23,9 @@
         <button type="submit">Gerar Chart</button>
     </form>
 
-    {% if request.method == 'POST' %}
+    {% if image_data %}
     <h2>Imagem Gerada:</h2>
-    <img src="{{ url_for('homepage') }}" alt="Imagem Gerada">
+    <img src="data:image/png;base64,{{ image_data }}" alt="Imagem Gerada" style="cursor: pointer;">
     {% endif %}
 </body>
 </html>
