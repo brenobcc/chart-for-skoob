@@ -7,8 +7,12 @@ app = Flask(__name__)
 def homepage():
     if request.method == "POST":
         user_id = request.form["user_id"]
-        
-        return startProcess(user_id, 4, 3, True)
+        column = int(request.form["column"])
+        line = int(request.form["line"])
+
+        paste_star = "paste_star" in request.form
+
+        return startProcess(user_id, column, line, paste_star)
 
     return render_template("homepage.html")
 

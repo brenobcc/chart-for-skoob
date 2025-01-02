@@ -26,8 +26,6 @@ def startProcess(user_id, columns, lines, paste_star):
         if total_read_books < book_quantity:
             exit(f"Você tem apenas {total_read_books} livros lidos.")
 
-        paste_star = False
-
         try:
            # inicio = time.time()
 
