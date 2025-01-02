@@ -17,6 +17,7 @@ def totalReadBooks(user_id):
 
 def mockFirstPageResponse(user_id, year):
     try:
+        target_year = year
         url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
 
         global headers 
@@ -28,17 +29,16 @@ def mockFirstPageResponse(user_id, year):
         response_json = response.json()
 
         if response_json["response"] == []:
-            global previous_year
-            previous_year = year - 1
+            target_year -= 1
 
-            return mockFirstPageResponse(user_id, previous_year)
+            return mockFirstPageResponse(user_id, target_year)
 
         total_books = response_json["paging"]["total"]
 
         new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:{total_books}/"
 
         new_response = requests.get(new_url, headers=headers)
-        return new_response
+        return new_response, target_year
 
     except Exception as e:
         print(e)
@@ -116,9 +116,9 @@ def applyGradient(book_img):
     return Image.alpha_composite(book_img, gradient_alpha)
 
 def previousYearJson(user_id, year):
-    response = mockFirstPageResponse(user_id, year)
+    response, temp_year = mockFirstPageResponse(user_id, year)
 
-    return response.json()
+    return response.json(), temp_year
 
 def processImage(book_json, book_edition, paste_star):
         book_img = book_edition["capa_grande"]
@@ -153,7 +153,7 @@ def createByteImageArray(user_id, response_json, book_quantity, current_year, pa
 
         if total_books_json <= book_count:
             current_year -= 1
-            response_json = previousYearJson(user_id, current_year)
+            response_json, current_year = previousYearJson(user_id, current_year)
 
             total_books_json = response_json["paging"]["total"]
 

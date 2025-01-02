@@ -1,17 +1,12 @@
 from .core_functions import *
 from flask import send_file
-
+import time
 def startProcess(user_id, columns, lines, paste_star):
+    inicio = time.time()
 
     current_year = datetime.now().year
 
-    response = mockFirstPageResponse(user_id, current_year)
-
-    try:
-        #fazer tratamento disso depois
-        current_year = 2024
-    except NameError:
-        print(f"Em {current_year} há registros")
+    response, current_year = mockFirstPageResponse(user_id, current_year)
 
     print(response.status_code)
 
@@ -36,6 +31,9 @@ def startProcess(user_id, columns, lines, paste_star):
             grid_io = io.BytesIO()
             grid.save(grid_io, 'PNG')  # Salva a imagem no buffer em formato PNG
             grid_io.seek(0)  # Move o ponteiro para o início do buffer
+            
+            fim = time.time()
+            print(f"Duração: {fim - inicio}")
 
             return grid_io
 
