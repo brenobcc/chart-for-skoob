@@ -3,6 +3,7 @@ from helpers import startProcess
 from io import BytesIO
 import io
 import base64
+import datetime
 
 app = Flask(__name__)
 
@@ -17,8 +18,10 @@ def homepage():
         chart_img_grid = startProcess(user_id, column, line, paste_star)
         
         img_base64 = base64.b64encode(chart_img_grid.getvalue()).decode('utf-8')
+        
+        current_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
-        return render_template("homepage.html", image_data=img_base64)
+        return render_template("homepage.html", image_data=img_base64, user_id=user_id, current_time=current_time)
 
     return render_template("homepage.html")
 
@@ -29,7 +32,7 @@ def serve_image():
         chart_img = io.BytesIO(image_data.encode('utf-8'))
         chart_img.seek(0)
         
-        return send_file(chart_img, mimetype='image/png', as_attachment=True, download_name="chart.png")
+        return send_file(chart_img, mimetype='image/png')
     return "No image data found", 400
 
 if __name__ == "__main__":

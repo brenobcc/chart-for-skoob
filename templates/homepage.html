@@ -25,7 +25,10 @@
 
     {% if image_data %}
     <h2>Imagem Gerada:</h2>
-    <img src="data:image/png;base64,{{ image_data }}" alt="Imagem Gerada" style="cursor: pointer;">
+    <img src="data:image/png;base64,{{ image_data }}" alt="Imagem Gerada">
+    <a href="data:image/png;base64,{{ image_data }}" download="chart_{{ user_id }}{{ current_time }}.png">
+        <button>Download</button>
+    </a>
     {% endif %}
 </body>
 </html>
