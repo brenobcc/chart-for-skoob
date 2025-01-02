@@ -11,9 +11,14 @@
     <h1>Skoob Chart</h1>
 
     <form method="POST">
+        <label for="user_id">Código de usuário Skoob</label>
         <input type="text" name="user_id" placeholder="Digite o seu código de usuário">
-        <input type="text" name="column" placeholder="Colunas">
-        <input type="text" name="line" placeholder="Linhas">
+
+        <label for="column">Colunas</label>
+        <input type="number" name="column" placeholder="Colunas" min="1" max="7" value="4">
+
+        <label for="line">Linhas</label>
+        <input type="number" name="line" placeholder="Linhas" min="1" max="7" value="3">
 
         <label>
             <input type="checkbox" name="paste_star" value="True" checked>
