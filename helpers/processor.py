@@ -1,50 +1,43 @@
-from core_functions import *
-from flask import send_file
+from .core_functions import *
 import time
+
 def startProcess(user_id, columns, lines, paste_star):
-    inicio = time.time()
+    print("Recebendo dados...")
 
-    current_year = datetime.now().year
+    total_grid_books = columns * lines
+    
+    current_year = 2025
 
-    response, current_year = mockFirstPageResponse(user_id, current_year)
+    print("Separando por ano...")
+    total_read_books, read_years = totalReadBooksAndYears(user_id, total_grid_books, current_year)
 
-    print(response.status_code)
+    if total_read_books < total_grid_books:
+        exit(f"Quantidade insuficiente de livros. {total_read_books} de {total_grid_books} necessários.")
 
-    if response.status_code == 200:
-        response_json = response.json()
-        # with open("log.json", "w", encoding="utf-8") as file:
-        #      json.dump(response_json, file, indent=4, ensure_ascii=False)
+    book_quantity = columns * lines
+    print(f"Grid: {book_quantity} livros")
 
-        book_quantity = columns * lines
+    try:
+        inicio = time.time()
+        
+        print("Gerando chart...")
+        chart_imgs = createByteImageArray(user_id, read_years, paste_star)
 
-        total_read_books = totalReadBooks(user_id)
-        if total_read_books < book_quantity:
-            print("Não leu o suficiente")
-            return None
+        print("Colando grid...")
+        grid = createGrid(columns, lines, chart_imgs)
+        
+        fim = time.time()     
+        print(fim - inicio)
+        
+        print("Grid encerrado.")
 
-        try:
-           # inicio = time.time()
-            print("Iniciando Array...")
-            chart_imgs = createByteImageArray(user_id, response_json, book_quantity, current_year, paste_star)
-            
-            print(chart_imgs)
-            
-            if chart_imgs == ValueError:
-                return ValueError
-            
-            grid = createGrid(columns, lines, chart_imgs)
+        grid_io = io.BytesIO()
+        grid.save(grid_io, 'PNG')  # Salva a imagem no buffer em formato PNG
+        grid_io.seek(0)  # Move o ponteiro para o início do buffer
+        
+        return grid_io
 
-            grid_io = io.BytesIO()
-            grid.save(grid_io, 'PNG')  # Salva a imagem no buffer em formato PNG
-            grid_io.seek(0)  # Move o ponteiro para o início do buffer
-            
-            fim = time.time()
-            print(f"Duração: {fim - inicio}")
+        # return send_file(grid_io, mimetype='image/png', as_attachment=False,download_name='generated_image.png')
 
-            return grid_io
-
-           # fim = time.time()
-            
-           # print(fim - inicio)
-        except Exception as e:
-            print(e)
+    except Exception as e:
+        print(e)

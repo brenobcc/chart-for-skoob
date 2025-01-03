@@ -1,4 +1,5 @@
 import requests
+import requests_cache
 import json
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 import io
@@ -6,6 +7,8 @@ from io import BytesIO
 import time
 from datetime import datetime
 
+requests_cache.install_cache("skoob_cache", expire_after=1800)
+    
 global headers
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
@@ -33,11 +36,6 @@ def totalReadBooksAndYears(user_id, total_grid_books, current_year):
 
 def mockPageResponseByYear(user_id, target_year, read_years):
     try:
-        url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{target_year}/page:1/limit:1/"
-
-        response = requests.get(url, headers=headers)
-        response_json = response.json()
-        
         total_books_by_year = read_years[target_year]
         
         new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{target_year}/page:1/limit:{total_books_by_year}/"
@@ -45,12 +43,6 @@ def mockPageResponseByYear(user_id, target_year, read_years):
         new_response = requests.get(new_url, headers=headers)
         
         return new_response
-
-        total_books = response_json["paging"]["total"]
-
-
-        new_response = requests.get(new_url, headers=headers)
-        return new_response, target_year
 
     except Exception as e:
         print(e)

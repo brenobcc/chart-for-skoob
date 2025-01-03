@@ -1,14 +1,14 @@
-from core_functions import *
+from .core_functions import *
 
 print("Recebendo dados...")
 
-user_id = #test
-columns = 8
-lines = 4
+user_id = #
+columns = 4
+lines = 3
 
 total_grid_books = columns * lines
 
-paste_star = False
+paste_star = True
 
 current_year = 2025
 
@@ -17,16 +17,9 @@ total_read_books, read_years = totalReadBooksAndYears(user_id, total_grid_books,
 
 if total_read_books < total_grid_books:
     exit(f"Quantidade insuficiente de livros. {total_read_books} de {total_grid_books} necessários.")
-        # with open("log.json", "w", encoding="utf-8") as file:
-        #      json.dump(response_json, file, indent=4, ensure_ascii=False)
 
 book_quantity = columns * lines
 print(f"Grid: {book_quantity} livros")
-
-    
-    # if total_read_books < book_quantity:
-    #     print(f"Você tem apenas {total_read_books} livros lidos.")
-
 
 try:
     inicio = time.time()

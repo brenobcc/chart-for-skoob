@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, send_file
-from helpers import startProcess
+from helpers.processor import startProcess
 from io import BytesIO
 import io
 import base64
