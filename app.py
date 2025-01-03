@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, send_file
 from helpers.processor import startProcess
-from io import BytesIO
 import io
 import base64
 import datetime
@@ -37,6 +36,18 @@ def serve_image():
         
         return send_file(chart_img, mimetype='image/png')
     return "No image data found", 400
+
+@app.route('/sobre')
+def about():
+    return render_template("about.html")
+
+@app.route('/privacidade')
+def privacy():
+    return render_template("privacy.html")
+
+@app.route('/contato')
+def contact():
+    return render_template("contact.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

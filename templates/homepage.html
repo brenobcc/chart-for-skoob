@@ -3,12 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Chart for Skoob</title>
     <link rel="stylesheet" href="static/style.css">
     
 </head>
 <body>
-    <h1>Chart for Skoob</h1>
+    <header>
+        <h1>Chart for Skoob</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('homepage') }}">Início</a></li>
+            <li><a href="{{ url_for('about') }}">Sobre</a></li>
+            <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
+            <li><a href="{{ url_for('contact') }}">Contato</a></li>
+        </ul>
+    </nav>
 
     <form method="POST">
         <label for="user_id">Código de usuário Skoob</label>
@@ -38,5 +48,8 @@
         <button>Download</button>
     </a>
     {% endif %}
+    <footer>
+        <p>Desenvolvido por Breno de Carvalho</p>
+    </footer>
 </body>
 </html>
