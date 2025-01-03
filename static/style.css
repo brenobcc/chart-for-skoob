@@ -1,7 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+* {
+    font-family: "Inter", sans-serif;
+}
 h1 {
     color: blue;
 }
 
 div#chart_img {
     margin-top: 20px;
+}
+
+.grid-container {
+    width: fit-content;
+    height: fit-content;
+}
+
+.grid-image {
+    max-width: 500px;
+    max-height: 500px;
+    border-radius: 5px;
+    object-fit: contain;
 }

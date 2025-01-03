@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="static/style.css">
+    
+</head>
+<body>
+    <header>
+        <h1>Chart for Skoob</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('homepage') }}">Início</a></li>
+            <li><a href="{{ url_for('about') }}">Sobre</a></li>
+            <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
+            <li><a href="{{ url_for('contact') }}">Contato</a></li>
+        </ul>
+    </nav>
+
+    <section>
+        <h1>Política de Privacidade</h1>
+            
+        <p>Esse site não usa os seus dados.</p>
+    </section>
+    <footer>
+        <p>Desenvolvido por Breno de Carvalho</p>
+    </footer>
+</body>
+</html>

@@ -1,43 +1,46 @@
 import requests
-import json
+import requests_cache
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 import io
 from io import BytesIO
 import time
-from datetime import datetime
 
-def totalReadBooks(user_id):
-    url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/shelf_id:1/page:1/limit:1/"
 
-    response = requests.get(url, headers=headers)
-    response_json = response.json()
-    total_read_books = response_json["paging"]["total"]
+requests_cache.install_cache("skoob_cache", expire_after=3600)
+    
+global headers
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+}
 
-    return total_read_books
-
-def mockFirstPageResponse(user_id, year):
-    try:
-        url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
-
-        global headers 
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-        }
-
+def totalReadBooksAndYears(user_id, total_grid_books, current_year):
+    total_read_books = 0
+    read_years = {}
+    
+    for i in range(current_year, 2008, -1):
+        url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{i}/page:1/limit:1/"
         response = requests.get(url, headers=headers)
         response_json = response.json()
 
-        if response_json["response"] == []:
-            global previous_year
-            previous_year = year - 1
+        if response_json["response"] != []:
+            total_read_books_by_year = response_json["paging"]["total"]
+            total_read_books += total_read_books_by_year
+            
+            read_years[f"{i}"] = total_read_books_by_year
+        
+        if total_grid_books <= total_read_books:
+            break
 
-            return mockFirstPageResponse(user_id, previous_year)
+    return total_read_books, read_years
 
-        total_books = response_json["paging"]["total"]
-
-        new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:{total_books}/"
-
+def mockPageResponseByYear(user_id, target_year, read_years):
+    try:
+        total_books_by_year = read_years[target_year]
+        
+        new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{target_year}/page:1/limit:{total_books_by_year}/"
+        
         new_response = requests.get(new_url, headers=headers)
+        
         return new_response
 
     except Exception as e:
@@ -115,11 +118,6 @@ def applyGradient(book_img):
 
     return Image.alpha_composite(book_img, gradient_alpha)
 
-def previousYearJson(user_id, year):
-    response = mockFirstPageResponse(user_id, year)
-
-    return response.json()
-
 def processImage(book_json, book_edition, paste_star):
         book_img = book_edition["capa_grande"]
 
@@ -143,44 +141,33 @@ def processImage(book_json, book_edition, paste_star):
 
         return book_img_resized
 
-def createByteImageArray(current_year, response_json, book_quantity, paste_star):
+def createByteImageArray(user_id, read_years, paste_star):
     chart_imgs = {}
-    total_books_json = response_json["paging"]["total"]
-
+    
     book_count = 0
-
-    while book_count < book_quantity:
-
-        if total_books_json <= book_count:
-            current_year -= 1
-            response_json = previousYearJson(user_id, current_year)
-
-            total_books_json = response_json["paging"]["total"]
-
-
+    
+    for year in read_years:
+        response = mockPageResponseByYear(user_id, year, read_years)
+        response_json = response.json()
+        total_read_books_by_year = response_json["paging"]["total"]
+        
         # Algoritmo para varrer JSON
-        for i in range(total_books_json - 1, -1, -1):
-
+        for i in range(total_read_books_by_year - 1, -1, -1):
+            book_count += 1
+            
             target_element = response_json["response"][i]
 
             book_edition = target_element["edicao"]
             book_name = book_edition["titulo"]
-    
+        
             book_img = processImage(target_element, book_edition, paste_star)
 
-            
-
-            # Salva dinamicamente a imagem em bytes em um array
+                # Salva dinamicamente a imagem em bytes em um array
             img_byte_value = io.BytesIO()
 
             book_img.save(img_byte_value, format="JPEG")
             chart_imgs[f"{book_count}-{book_name}"] = img_byte_value.getvalue()
-
-            book_count += 1
-
-            if book_count == book_quantity:
-                break
-    
+        
     return chart_imgs
 
 # Gerar grid de imagens
@@ -189,6 +176,8 @@ def createGrid(columns, lines, chart_imgs):
 
     chart_width = new_size[0] * columns
     chart_height = new_size[1] * lines
+
+    book_quantity = columns * lines
 
     book_count = 0
 
@@ -209,44 +198,4 @@ def createGrid(columns, lines, chart_imgs):
 
         book_count += 1
 
-    grid.save(f"grid{columns}x{lines}.jpg")
-
-user_id = input("input your profile id: ")
-
-current_year = datetime.now().year
-
-response = mockFirstPageResponse(user_id, current_year)
-
-try:
-    current_year = previous_year
-except NameError:
-    print(f"Em {current_year} há registros")
-
-print(response.status_code)
-
-if response.status_code == 200:
-    response_json = response.json()
-    # with open("log.json", "w", encoding="utf-8") as file:
-    #      json.dump(response_json, file, indent=4, ensure_ascii=False)
-    
-    columns, lines = map(int, input("Selecione o tamanho do grid:").split())
-    book_quantity = columns * lines
-
-    total_read_books = totalReadBooks(user_id)
-    if total_read_books < book_quantity:
-        exit(f"Você tem apenas {total_read_books} livros lidos.")
-
-    paste_star = False
-
-    try:
-        inicio = time.time()
-
-        chart_imgs = createByteImageArray(current_year, response_json, book_quantity, paste_star)
-
-        createGrid(columns, lines, chart_imgs)
-
-        fim = time.time()
-        
-        print(fim - inicio)
-    except Exception as e:
-        print(e)
+    return grid
