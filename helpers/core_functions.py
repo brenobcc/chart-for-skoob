@@ -1,11 +1,10 @@
 import requests
 import requests_cache
-import json
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 import io
 from io import BytesIO
 import time
-from datetime import datetime
+
 
 requests_cache.install_cache("skoob_cache", expire_after=3600)
     
