@@ -1,4 +1,5 @@
 import requests
+import requests_cache
 import json
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 import io
@@ -6,6 +7,8 @@ from io import BytesIO
 import time
 from datetime import datetime
 
+requests_cache.install_cache("skoob_cache", expire_after=1800)
+    
 global headers
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
@@ -31,22 +34,15 @@ def totalReadBooksAndYears(user_id, total_grid_books, current_year):
 
     return total_read_books, read_years
 
-def mockPageResponseByYear(user_id, year):
+def mockPageResponseByYear(user_id, target_year, read_years):
     try:
-        target_year = year
-        url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
-
-        response = requests.get(url, headers=headers)
-        response_json = response.json()
-
-        return mockFirstPageResponse(user_id, target_year)
-
-        total_books = response_json["paging"]["total"]
-
-        new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:{total_books}/"
-
+        total_books_by_year = read_years[target_year]
+        
+        new_url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{target_year}/page:1/limit:{total_books_by_year}/"
+        
         new_response = requests.get(new_url, headers=headers)
-        return new_response, target_year
+        
+        return new_response
 
     except Exception as e:
         print(e)
@@ -123,14 +119,6 @@ def applyGradient(book_img):
 
     return Image.alpha_composite(book_img, gradient_alpha)
 
-def previousYearJson(user_id, year):
-    response, temp_year = mockFirstPageResponse(user_id, year)
-
-    if response is None:
-        return None, temp_year
-    
-    return response.json(), temp_year
-
 def processImage(book_json, book_edition, paste_star):
         book_img = book_edition["capa_grande"]
 
@@ -154,48 +142,33 @@ def processImage(book_json, book_edition, paste_star):
 
         return book_img_resized
 
-def createByteImageArray(user_id, response_json, book_quantity, current_year, paste_star):
+def createByteImageArray(user_id, read_years, paste_star):
     chart_imgs = {}
-    total_books_json = response_json["paging"]["total"]
-
+    
     book_count = 0
-
-    while book_count < book_quantity:
+    
+    for year in read_years:
+        response = mockPageResponseByYear(user_id, year, read_years)
+        response_json = response.json()
+        total_read_books_by_year = response_json["paging"]["total"]
         
-        if current_year < 2009:
-            return chart_imgs
-        
-        if total_books_json <= book_count:
-            current_year -= 1
-            response_json, current_year = previousYearJson(user_id, current_year)
-
-            if response_json is None and current_year == 2009:
-                return ValueError
-        
-            total_books_json = response_json["paging"]["total"]
-
-
         # Algoritmo para varrer JSON
-        for i in range(total_books_json - 1, -1, -1):
-
+        for i in range(total_read_books_by_year - 1, -1, -1):
+            book_count += 1
+            
             target_element = response_json["response"][i]
 
             book_edition = target_element["edicao"]
             book_name = book_edition["titulo"]
-    
+        
             book_img = processImage(target_element, book_edition, paste_star)
 
-            # Salva dinamicamente a imagem em bytes em um array
+                # Salva dinamicamente a imagem em bytes em um array
             img_byte_value = io.BytesIO()
 
             book_img.save(img_byte_value, format="JPEG")
             chart_imgs[f"{book_count}-{book_name}"] = img_byte_value.getvalue()
-
-            book_count += 1
-
-            if book_count == book_quantity:
-                break
-    
+        
     return chart_imgs
 
 # Gerar grid de imagens
