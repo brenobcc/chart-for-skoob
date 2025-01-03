@@ -6,32 +6,40 @@ from io import BytesIO
 import time
 from datetime import datetime
 
-def totalReadBooks(user_id):
-    url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/shelf_id:1/page:1/limit:1/"
+global headers
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+}
 
-    response = requests.get(url, headers=headers)
-    response_json = response.json()
-    total_read_books = response_json["paging"]["total"]
+def totalReadBooksAndYears(user_id, total_grid_books, current_year):
+    total_read_books = 0
+    read_years = {}
+    
+    for i in range(current_year, 2008, -1):
+        url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{i}/page:1/limit:1/"
+        response = requests.get(url, headers=headers)
+        response_json = response.json()
 
-    return total_read_books
+        if response_json["response"] != []:
+            total_read_books_by_year = response_json["paging"]["total"]
+            total_read_books += total_read_books_by_year
+            
+            read_years[f"{i}"] = total_read_books_by_year
+        
+        if total_grid_books <= total_read_books:
+            break
 
-def mockFirstPageResponse(user_id, year):
+    return total_read_books, read_years
+
+def mockPageResponseByYear(user_id, year):
     try:
         target_year = year
         url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{year}/page:1/limit:1/"
 
-        global headers 
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-        }
-
         response = requests.get(url, headers=headers)
         response_json = response.json()
 
-        if response_json["response"] == []:
-            target_year -= 1
-
-            return mockFirstPageResponse(user_id, target_year)
+        return mockFirstPageResponse(user_id, target_year)
 
         total_books = response_json["paging"]["total"]
 
@@ -118,6 +126,9 @@ def applyGradient(book_img):
 def previousYearJson(user_id, year):
     response, temp_year = mockFirstPageResponse(user_id, year)
 
+    if response is None:
+        return None, temp_year
+    
     return response.json(), temp_year
 
 def processImage(book_json, book_edition, paste_star):
@@ -150,11 +161,17 @@ def createByteImageArray(user_id, response_json, book_quantity, current_year, pa
     book_count = 0
 
     while book_count < book_quantity:
-
+        
+        if current_year < 2009:
+            return chart_imgs
+        
         if total_books_json <= book_count:
             current_year -= 1
             response_json, current_year = previousYearJson(user_id, current_year)
 
+            if response_json is None and current_year == 2009:
+                return ValueError
+        
             total_books_json = response_json["paging"]["total"]
 
 
@@ -167,8 +184,6 @@ def createByteImageArray(user_id, response_json, book_quantity, current_year, pa
             book_name = book_edition["titulo"]
     
             book_img = processImage(target_element, book_edition, paste_star)
-
-            
 
             # Salva dinamicamente a imagem em bytes em um array
             img_byte_value = io.BytesIO()
