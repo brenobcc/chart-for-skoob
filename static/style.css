@@ -5,3 +5,15 @@ h1 {
 div#chart_img {
     margin-top: 20px;
 }
+
+.grid-container {
+    width: fit-content;
+    height: fit-content;
+}
+
+.grid-image {
+    max-width: 500px;
+    max-height: 500px;
+    border-radius: 5px;
+    object-fit: contain;
+}

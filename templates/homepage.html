@@ -8,11 +8,11 @@
     
 </head>
 <body>
-    <h1>Skoob Chart</h1>
+    <h1>Chart for Skoob</h1>
 
     <form method="POST">
         <label for="user_id">Código de usuário Skoob</label>
-        <input type="text" name="user_id" placeholder="Digite o seu código de usuário">
+        <input type="text" name="user_id" placeholder="Digite o seu código de usuário" required>
 
         <label for="column">Colunas</label>
         <input type="number" name="column" placeholder="Colunas" min="1" max="7" value="4">
@@ -30,8 +30,11 @@
 
     {% if image_data %}
     <h2>Imagem Gerada:</h2>
-    <img src="data:image/png;base64,{{ image_data }}" alt="Imagem Gerada">
-    <a href="data:image/png;base64,{{ image_data }}" download="chart_{{ user_id }}{{ current_time }}.png">
+    <div class="grid-container">
+        <img class="grid-image" src="data:image/png;base64,{{ image_data }}" alt="Imagem Gerada">
+        <a href="data:image/png;base64,{{ image_data }}" download="chart_{{ user_id }}{{ current_time }}.png">
+    </div>
+    
         <button>Download</button>
     </a>
     {% endif %}

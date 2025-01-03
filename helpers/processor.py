@@ -1,4 +1,5 @@
 from .core_functions import *
+from datetime import datetime
 import time
 
 def startProcess(user_id, columns, lines, paste_star):
@@ -6,7 +7,7 @@ def startProcess(user_id, columns, lines, paste_star):
 
     total_grid_books = columns * lines
     
-    current_year = 2025
+    current_year = datetime.now().year
 
     print("Separando por ano...")
     total_read_books, read_years = totalReadBooksAndYears(user_id, total_grid_books, current_year)

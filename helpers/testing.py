@@ -1,4 +1,4 @@
-from .core_functions import *
+from core_functions import *
 
 print("Recebendo dados...")
 

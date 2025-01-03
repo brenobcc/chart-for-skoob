@@ -7,7 +7,7 @@ from io import BytesIO
 import time
 from datetime import datetime
 
-requests_cache.install_cache("skoob_cache", expire_after=1800)
+requests_cache.install_cache("skoob_cache", expire_after=3600)
     
 global headers
 headers = {
