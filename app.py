@@ -17,6 +17,9 @@ def homepage():
         
         chart_img_grid = startProcess(user_id, column, line, paste_star)
         
+        if chart_img_grid == None or chart_img_grid == ValueError:
+            return render_template("erro.html")
+        
         img_base64 = base64.b64encode(chart_img_grid.getvalue()).decode('utf-8')
         
         current_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')

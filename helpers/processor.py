@@ -1,4 +1,4 @@
-from .core_functions import *
+from core_functions import *
 from flask import send_file
 import time
 def startProcess(user_id, columns, lines, paste_star):
@@ -19,13 +19,19 @@ def startProcess(user_id, columns, lines, paste_star):
 
         total_read_books = totalReadBooks(user_id)
         if total_read_books < book_quantity:
-            exit(f"Você tem apenas {total_read_books} livros lidos.")
+            print("Não leu o suficiente")
+            return None
 
         try:
            # inicio = time.time()
-
+            print("Iniciando Array...")
             chart_imgs = createByteImageArray(user_id, response_json, book_quantity, current_year, paste_star)
-
+            
+            print(chart_imgs)
+            
+            if chart_imgs == ValueError:
+                return ValueError
+            
             grid = createGrid(columns, lines, chart_imgs)
 
             grid_io = io.BytesIO()
