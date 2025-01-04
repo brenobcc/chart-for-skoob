@@ -152,7 +152,7 @@ def createByteImageArray(user_id, book_quantity, read_years, paste_star):
         total_read_books_by_year = response_json["paging"]["total"]
         
         # Algoritmo para varrer JSON
-        for i in range(total_read_books_by_year - 1, -1, -1):
+        for i in range(total_read_books_by_year - 1, - 1, -1):
             book_count += 1
             
             target_element = response_json["response"][i]

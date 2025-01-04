@@ -10,8 +10,11 @@ import datetime
 def homepage():
     if request.method == "POST":
         user_id = request.form["user_id"]
-        column = int(request.form["column"])
-        line = int(request.form["line"])
+        
+        grid_size = request.form["grid_size"]
+        
+        column, line = map(int, grid_size.split(','))
+
         paste_star = "paste_star" in request.form
         
         chart_img_grid = startProcess(user_id, column, line, paste_star)

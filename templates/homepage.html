@@ -23,12 +23,15 @@
     <form method="POST">
         <label for="user_id">Código de usuário Skoob</label>
         <input type="text" name="user_id" placeholder="Digite o seu código de usuário" required>
-
-        <label for="column">Colunas</label>
-        <input type="number" name="column" placeholder="Colunas" min="1" max="7" value="4">
-
-        <label for="line">Linhas</label>
-        <input type="number" name="line" placeholder="Linhas" min="1" max="7" value="3">
+        
+        <label for="grid_size">Grid</label>
+        <select name="grid_size" id="grid_size">
+            <option value="3,2">3x2</option>
+            <option value="4,3" selected>4x3</option>
+            <option value="5,4">5x4</option>
+            <option value="7,5">7x5</option>
+            <option value="8,6">8x6</option>
+        </select>
 
         <label>
             <input type="checkbox" name="paste_star" value="True" checked>
