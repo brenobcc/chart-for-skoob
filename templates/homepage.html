@@ -22,10 +22,20 @@
     </header>
 
     <section class="main-section">
-        <p>Gere o seu chart de livros!</p>
-        <p></p>
-        <form method="POST">
-            <label for="user_id">Código de usuário Skoob</label>
+        <h1>Gere o seu chart de livros!</h1>
+
+        <p>Para obter o seu <strong>código de usuário</strong> do Skoob, siga estas etapas:</p> 
+            <ul> 
+                <li>No aplicativo, acesse o seu <strong>Perfil</strong>, toque na sua <strong>Foto</strong> e selecione a opção <strong>Compartilhar</strong>. O código estará no final do link compartilhado.</li> 
+                <li>Se estiver usando um navegador, acesse o seu perfil. O código será exibido diretamente na URL da página.</li> 
+            </ul>
+
+        <div class="grid-container">
+            <img class="grid-image" src="static/images/instructions.png" alt="Imagem Gerada">
+        </div>
+        
+        <form class="form" method="POST">
+            <label for="user_id">Código de usuário</label>
             <input type="text" name="user_id" placeholder="Digite o seu código de usuário" required>
         
             <label for="grid_size">Grid</label>
