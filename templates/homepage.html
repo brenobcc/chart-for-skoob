@@ -9,7 +9,7 @@
 </head>
 <body>
     <header>
-        <h1 class="logo">Chart for Skoob</h1>
+        <a href="{{ url_for('homepage') }}"><h1 class="logo">Chart for Skoob</h1></a>
 
         <nav class="nav">
             <ul>
@@ -21,7 +21,7 @@
         </nav>
     </header>
 
-    <section class="main_section">
+    <section class="main-section">
         <form method="POST">
             <label for="user_id">Código de usuário Skoob</label>
             <input type="text" name="user_id" placeholder="Digite o seu código de usuário" required>

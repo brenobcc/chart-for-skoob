@@ -16,6 +16,14 @@ header {
     align-items: center;
 }
 
+header a {
+    text-decoration: none;
+}
+
+header a:visited {
+    text-decoration: none;
+}
+
 h1.logo {
     font-size: 36px;
     width: fit-content;
