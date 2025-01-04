@@ -22,6 +22,8 @@
     </header>
 
     <section class="main-section">
+        <p>Gere o seu chart de livros!</p>
+        <p></p>
         <form method="POST">
             <label for="user_id">Código de usuário Skoob</label>
             <input type="text" name="user_id" placeholder="Digite o seu código de usuário" required>
@@ -40,11 +42,12 @@
             </label>
             <button type="submit">Gerar Chart</button>
         </form>
+
         {% if image_data %}
         <h2>Imagem Gerada:</h2>
         <div class="grid-container">
             <img class="grid-image" src="data:image/png;base64,{{ image_data }}" alt="Imagem Gerada">
-            <a href="data:image/png;base64,{{ image_data }}" download="chart_{{ user_id }}{{ current_time }}.png">
+            <a href="data:image/png;base64,{{ image_data }}" download="chart_{{ user_id }}{{ current_time_generate }}.png">
         </div>
         
             <button>Download</button>
@@ -53,7 +56,7 @@
     </section>
 
     <footer>
-        <p>Desenvolvido por Breno de Carvalho</p>
+        <p>© {{ current_year }} | Desenvolvido por Breno de Carvalho</p>
     </footer>
 </body>
 </html>
