@@ -22,7 +22,7 @@ def startProcess(user_id, columns, lines, paste_star):
         inicio = time.time()
         
         print("Gerando chart...")
-        chart_imgs = createByteImageArray(user_id, read_years, paste_star)
+        chart_imgs = createByteImageArray(user_id, book_quantity, read_years, paste_star)
 
         print("Colando grid...")
         grid = createGrid(columns, lines, chart_imgs)

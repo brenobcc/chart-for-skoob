@@ -141,7 +141,7 @@ def processImage(book_json, book_edition, paste_star):
 
         return book_img_resized
 
-def createByteImageArray(user_id, read_years, paste_star):
+def createByteImageArray(user_id, book_quantity, read_years, paste_star):
     chart_imgs = {}
     
     book_count = 0
@@ -167,8 +167,9 @@ def createByteImageArray(user_id, read_years, paste_star):
 
             book_img.save(img_byte_value, format="JPEG")
             chart_imgs[f"{book_count}-{book_name}"] = img_byte_value.getvalue()
-        
-    return chart_imgs
+            
+            if book_count >= book_quantity:
+                return chart_imgs
 
 # Gerar grid de imagens
 def createGrid(columns, lines, chart_imgs):

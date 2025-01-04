@@ -2,7 +2,7 @@ from core_functions import *
 
 print("Recebendo dados...")
 
-user_id = #
+user_id = 7083090
 columns = 4
 lines = 3
 
@@ -25,7 +25,7 @@ try:
     inicio = time.time()
     
     print("Gerando chart...")
-    chart_imgs = createByteImageArray(user_id, read_years, paste_star)
+    chart_imgs = createByteImageArray(user_id, book_quantity, read_years, paste_star)
 
     print("Colando grid...")
     grid = createGrid(columns, lines, chart_imgs)
