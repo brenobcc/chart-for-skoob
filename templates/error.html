@@ -9,16 +9,17 @@
 </head>
 <body>
     <header>
-        <h1>Chart for Skoob</h1>
+        <h1 class="logo">Chart for Skoob</h1>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Início</a></li>
+                <li><a href="{{ url_for('about') }}">Sobre</a></li>
+                <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
+                <li><a href="{{ url_for('contact') }}">Contato</a></li>
+            </ul>
+        </nav>
     </header>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('homepage') }}">Início</a></li>
-            <li><a href="{{ url_for('about') }}">Sobre</a></li>
-            <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
-            <li><a href="{{ url_for('contact') }}">Contato</a></li>
-        </ul>
-    </nav>
 
     <section>
         <h1>Erro</h1>

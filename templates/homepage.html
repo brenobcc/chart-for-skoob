@@ -9,48 +9,49 @@
 </head>
 <body>
     <header>
-        <h1>Chart for Skoob</h1>
+        <h1 class="logo">Chart for Skoob</h1>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Início</a></li>
+                <li><a href="{{ url_for('about') }}">Sobre</a></li>
+                <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
+                <li><a href="{{ url_for('contact') }}">Contato</a></li>
+            </ul>
+        </nav>
     </header>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('homepage') }}">Início</a></li>
-            <li><a href="{{ url_for('about') }}">Sobre</a></li>
-            <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
-            <li><a href="{{ url_for('contact') }}">Contato</a></li>
-        </ul>
-    </nav>
 
-    <form method="POST">
-        <label for="user_id">Código de usuário Skoob</label>
-        <input type="text" name="user_id" placeholder="Digite o seu código de usuário" required>
+    <section class="main_section">
+        <form method="POST">
+            <label for="user_id">Código de usuário Skoob</label>
+            <input type="text" name="user_id" placeholder="Digite o seu código de usuário" required>
         
-        <label for="grid_size">Grid</label>
-        <select name="grid_size" id="grid_size">
-            <option value="3,2">3x2</option>
-            <option value="4,3" selected>4x3</option>
-            <option value="5,4">5x4</option>
-            <option value="7,5">7x5</option>
-            <option value="8,6">8x6</option>
-        </select>
+            <label for="grid_size">Grid</label>
+            <select name="grid_size" id="grid_size">
+                <option value="3,2">3x2</option>
+                <option value="4,3" selected>4x3</option>
+                <option value="5,4">5x4</option>
+                <option value="7,5">7x5</option>
+                <option value="8,6">8x6</option>
+            </select>
+            <label>
+                <input type="checkbox" name="paste_star" value="True" checked>
+                Com avaliações
+            </label>
+            <button type="submit">Gerar Chart</button>
+        </form>
+        {% if image_data %}
+        <h2>Imagem Gerada:</h2>
+        <div class="grid-container">
+            <img class="grid-image" src="data:image/png;base64,{{ image_data }}" alt="Imagem Gerada">
+            <a href="data:image/png;base64,{{ image_data }}" download="chart_{{ user_id }}{{ current_time }}.png">
+        </div>
+        
+            <button>Download</button>
+        </a>
+        {% endif %}
+    </section>
 
-        <label>
-            <input type="checkbox" name="paste_star" value="True" checked>
-            Com avaliações
-        </label>
-
-        <button type="submit">Gerar Chart</button>
-    </form>
-
-    {% if image_data %}
-    <h2>Imagem Gerada:</h2>
-    <div class="grid-container">
-        <img class="grid-image" src="data:image/png;base64,{{ image_data }}" alt="Imagem Gerada">
-        <a href="data:image/png;base64,{{ image_data }}" download="chart_{{ user_id }}{{ current_time }}.png">
-    </div>
-    
-        <button>Download</button>
-    </a>
-    {% endif %}
     <footer>
         <p>Desenvolvido por Breno de Carvalho</p>
     </footer>
