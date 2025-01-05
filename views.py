@@ -11,6 +11,8 @@ current_year = datetime.datetime.now().strftime('%Y')
 @app.route('/', methods=["GET", "POST"])
 def homepage():
     
+    image_src = "static/images/instructions.png"
+    
     if request.method == "POST":
         user_id = request.form["user_id"]
         
@@ -28,10 +30,12 @@ def homepage():
         img_base64 = base64.b64encode(chart_img_grid.getvalue()).decode('utf-8')
         
         current_time_generate = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        
+        image_src = f"data:image/png;base64,{img_base64}"
 
-        return render_template("homepage.html", image_data=img_base64, user_id=user_id, current_time_generate=current_time_generate, current_year=current_year)
+        return render_template("homepage.html", image_data=img_base64, user_id=user_id, current_time_generate=current_time_generate, current_year=current_year, image_src=image_src)
     
-    return render_template("homepage.html", current_year=current_year)
+    return render_template("homepage.html", current_year=current_year, image_src=image_src)
 
 @app.route('/image')
 def serve_image():

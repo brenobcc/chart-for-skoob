@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chart for Skoob</title>
     <link rel="stylesheet" href="static/style.css">
-    
 </head>
 <body>
     <header>
@@ -30,39 +29,36 @@
                 <li>Se estiver usando um navegador, acesse o seu perfil. O código será exibido diretamente na URL da página.</li> 
             </ul>
 
-        <div class="grid-container">
-            <img class="grid-image" src="static/images/instructions.png" alt="Imagem Gerada">
+        <section class="grid-container">
+            <img class="grid-image" src="{{ image_src }}" alt="Imagem Gerada">
         </div>
         
-        <form class="form" method="POST">
-            <label for="user_id">Código de usuário</label>
-            <input type="text" name="user_id" placeholder="Digite o seu código de usuário" required>
-        
-            <label for="grid_size">Grid</label>
-            <select name="grid_size" id="grid_size">
-                <option value="3,2">3x2</option>
-                <option value="4,3" selected>4x3</option>
-                <option value="5,4">5x4</option>
-                <option value="7,5">7x5</option>
-                <option value="8,6">8x6</option>
-            </select>
-            <label>
-                <input type="checkbox" name="paste_star" value="True" checked>
-                Com avaliações
-            </label>
-            <button type="submit">Gerar Chart</button>
-        </form>
+        <section class="form-section">
+            <form class="form" method="POST">
+                
+                <section class="input-section">
+                    <label for="user_id">Código de usuário</label>
+                    <input class="input-id" type="text" name="user_id" placeholder="Digite o seu código" required>
+                </section>
+            
+                <section class="grid-size">
+                    <label for="grid_size">Grid</label>
+                    <select name="grid_size" id="grid_size">
+                        <option value="3,2">3x2</option>
+                        <option value="4,3" selected>4x3</option>
+                        <option value="5,4">5x4</option>
+                        <option value="7,5">7x5</option>
+                        <option value="8,6">8x6</option>
+                    </select>
+                    <label>
+                        <input type="checkbox" name="paste_star" value="True" checked>
+                        Com avaliações
+                    </label>
+                </section>
 
-        {% if image_data %}
-        <h2>Imagem Gerada:</h2>
-        <div class="grid-container">
-            <img class="grid-image" src="data:image/png;base64,{{ image_data }}" alt="Imagem Gerada">
-            <a href="data:image/png;base64,{{ image_data }}" download="chart_{{ user_id }}{{ current_time_generate }}.png">
-        </div>
-        
-            <button>Download</button>
-        </a>
-        {% endif %}
+                <button class="button-generate" type="submit">Gerar Chart</button>
+            </form>
+        </section>        
     </section>
 
     <footer>
