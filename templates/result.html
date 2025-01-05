@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart for Skoob</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('homepage') }}"><h1 class="logo">Chart for Skoob</h1></a>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Início</a></li>
+                <li><a href="{{ url_for('about') }}">Sobre</a></li>
+                <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
+                <li><a href="{{ url_for('contact') }}">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="main-section">
+        <h1 class="result">O seu chart está pronto!</h1>
+
+        <section class="grid-container">
+            <img class="grid-image" src="{{ image_src }}" alt="Imagem Gerada">
+        </section>
+
+        <section class="grid-size">
+            <a class="a-button" href="{{ image_src }}" download="chart_{{ user_id }}{{ current_time_generate }}.png">
+                <button class="button-generate" style="justify-self: center;">Download</button>
+            </a>
+        </section>
+
+    </section>
+
+    <footer>
+        <p>© {{ current_year }} | Desenvolvido por Breno de Carvalho</p>
+    </footer>
+</body>
+</html>

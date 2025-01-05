@@ -33,7 +33,7 @@ def homepage():
         
         image_src = f"data:image/png;base64,{img_base64}"
 
-        return render_template("homepage.html", image_data=img_base64, user_id=user_id, current_time_generate=current_time_generate, current_year=current_year, image_src=image_src)
+        return render_template("result.html", image_data=img_base64, user_id=user_id, current_time_generate=current_time_generate, current_year=current_year, image_src=image_src)
     
     return render_template("homepage.html", current_year=current_year, image_src=image_src)
 

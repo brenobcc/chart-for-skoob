@@ -78,9 +78,10 @@ div#chart_img {
 }
 
 .grid-image {
-    max-width: 300px;
-    max-height: 300px;
+    max-width: 400px;
+    max-height: 400px;
     border-radius: 5px;
+    margin: 5px;
     object-fit: contain;
 }
 
@@ -90,19 +91,21 @@ label {
 
 .grid-size {
     display: flex;
+    justify-content: center;
     align-items: center;
     padding: 8px;
 }
 
 .input-section {
     display: flex;
+    align-items: center;
 }
 
-/* .input-id {
+.input-id {
     border: 1px solid #2c2d2e;
     padding: 5px 12px;
     border-radius: 10px;
-} */
+}
 
 .button-generate {
     font-size: 22px;
@@ -126,4 +129,16 @@ label {
 .button-generate:active {
     background-color: #16334a;
     transform: scale(0.95);
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 36px;
+}
+
+h1.result {
+    width: fit-content;
+    justify-self: center;
 }
