@@ -27,9 +27,13 @@
             <img class="grid-image" src="{{ image_src }}" alt="Imagem Gerada">
         </section>
 
-        <section class="grid-size">
+        <section class="grid-size download">
             <a class="a-button" href="{{ image_src }}" download="chart_{{ user_id }}{{ current_time_generate }}.png">
                 <button class="button-generate" style="justify-self: center;">Download</button>
+            </a>
+
+            <a class="a-button" href="{{ url_for('homepage') }}">
+                ↺ Gerar outro chart
             </a>
         </section>
 

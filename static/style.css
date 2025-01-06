@@ -18,6 +18,15 @@ header {
     align-items: center;
 }
 
+a {
+    color: black;
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
 header a {
     text-decoration: none;
 }
@@ -141,4 +150,14 @@ footer {
 h1.result {
     width: fit-content;
     justify-self: center;
+}
+
+.download {
+    display: flex;
+    flex-direction: column;
+}
+
+a.a-button {
+    margin: 15px;
+    font-size: 20px;
 }
