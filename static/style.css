@@ -84,6 +84,7 @@ div#chart_img {
     justify-self: center;
     width: fit-content;
     height: fit-content;
+    position: relative;
 }
 
 .grid-image {
@@ -160,4 +161,13 @@ h1.result {
 a.a-button {
     margin: 15px;
     font-size: 20px;
+}
+
+a.a-button:hover {
+    transform: scale(1.05);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+a.a-button:active {
+    transform: scale(0.95);
 }

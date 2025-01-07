@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +30,8 @@
             </ul>
 
         <section class="grid-container">
-            <img class="grid-image" src="{{ image_src }}" alt="Imagem Gerada">
+            <img id="instruction-image" class="grid-image" src="{{ image_src }}" alt="Imagem Gerada">
+            <div class="loader"></div>
         </section>
         
         <section class="form-section">
@@ -64,5 +65,7 @@
     <footer>
         <p>© {{ current_year }} | Desenvolvido por Breno de Carvalho</p>
     </footer>
+
+    <script src="../static/load-image.js"></script>
 </body>
 </html>
