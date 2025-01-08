@@ -4,12 +4,19 @@
     font-family: "Inter", sans-serif;
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
 body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     max-width: 1200px;
-    width: 100%;
-    justify-self: center;
-    padding: 10px;
     margin: 0 auto;
+    padding: 10px;
 }
 
 header {
@@ -136,6 +143,9 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #f8f8f8;
+    padding: 20px;
+    text-align: center;
     margin-top: 36px;
 }
 
@@ -178,4 +188,9 @@ p {
 
 p a {
     text-decoration: none;
+}
+
+.main-section {
+    flex: 1;
+    padding: 10px;
 }
