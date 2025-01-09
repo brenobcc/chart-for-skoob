@@ -10,6 +10,12 @@
     <header>
         <a href="{{ url_for('homepage') }}"><h1 class="logo">Chart for Skoob</h1></a>
 
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+
         <nav class="nav">
             <ul>
                 <li><a href="{{ url_for('homepage') }}">Início</a></li>
@@ -63,7 +69,7 @@
     </section>
 
     <footer>
-        <p>© {{ current_year }} | Desenvolvido por Breno de Carvalho</p>
+        <p>© {{ current_year }} | Desenvolvido por <a href="https://github.com/brenovsky/" target="_blank">Breno de Carvalho</a></p>
     </footer>
 
     <script src="../static/loadingImage.js"></script>

@@ -13,7 +13,8 @@ def startProcess(user_id, columns, lines, paste_star):
     total_read_books, read_years = totalReadBooksAndYears(user_id, total_grid_books, current_year)
 
     if total_read_books < total_grid_books:
-        exit(f"Quantidade insuficiente de livros. {total_read_books} de {total_grid_books} necessários.")
+        print(f"Quantidade insuficiente de livros. {total_read_books} de {total_grid_books} necessários.")
+        return
 
     book_quantity = columns * lines
     print(f"Grid: {book_quantity} livros")
