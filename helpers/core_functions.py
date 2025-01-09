@@ -14,22 +14,22 @@ headers = {
 }
 
 def totalReadBooksAndYears(user_id, total_grid_books, current_year):
+    target_year = current_year
     total_read_books = 0
     read_years = {}
     
-    for i in range(current_year, 2008, -1):
-        url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{i}/page:1/limit:1/"
+    while (target_year > 2008 and total_grid_books > total_read_books):
+        url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{target_year}/page:1/limit:1/"
         response = requests.get(url, headers=headers)
         response_json = response.json()
 
-        if response_json["response"] != []:
+        if response_json["response"]:
             total_read_books_by_year = response_json["paging"]["total"]
             total_read_books += total_read_books_by_year
             
-            read_years[f"{i}"] = total_read_books_by_year
+            read_years[f"{target_year}"] = total_read_books_by_year
         
-        if total_grid_books <= total_read_books:
-            break
+        target_year -= 1
 
     return total_read_books, read_years
 
