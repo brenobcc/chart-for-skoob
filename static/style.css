@@ -199,3 +199,9 @@ ul li.privacy {
     font-weight: bold;
     font-size: 20px;
 }
+
+div.tenor-gif-embed {
+    max-width: 50vw;
+    max-height: 50vh;
+    justify-self: center;
+}

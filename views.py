@@ -1,12 +1,13 @@
 from app import app
-
 from flask import render_template, request, send_file
 from helpers.processor import startProcess
 import io
 import base64
 import datetime
+from helpers.exceptions import *
 
 current_year = datetime.datetime.now().strftime('%Y')
+error_code = 0
 
 @app.route('/', methods=["GET", "POST"])
 def homepage():
@@ -24,8 +25,14 @@ def homepage():
         
         chart_img_grid = startProcess(user_id, column, line, paste_star)
         
+        ###Exceptions###
+        #1. Invalid user
+        if chart_img_grid == InvalidUserException:
+            return render_template("error.html", current_year=current_year, user_id=user_id, error_code=1)
+        
+        #2. Not enough registered books
         if chart_img_grid == None or chart_img_grid == ValueError:
-            return render_template("erro.html", current_year=current_year)
+            return render_template("error.html", current_year=current_year)
         
         img_base64 = base64.b64encode(chart_img_grid.getvalue()).decode('utf-8')
         

@@ -22,9 +22,14 @@
     </header>
 
     <section>
-        <h1>Erro</h1>
-            
-        <p>Mensagem de erro.</p>
+        {% if error_code == 1 %}
+        <h1>Erro {{ error_code }}: Usuário inválido</h1>
+        <p>O usuário <strong>{{ user_id }}</strong> não existe na base de dados do Skoob. Por favor, tente novamente.</p>
+        {% endif %}
+        
+        <div class="tenor-gif-embed" data-postid="1531060873366620229" data-share-method="host" data-aspect-ratio="1.16355" data-width="100%"><a href="https://tenor.com/view/sad-sorry-gif-1531060873366620229">Sad Sorry GIF</a>from <a href="https://tenor.com/search/sad-gifs">Sad GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+
+
     </section>
     <footer>
         <p>© {{ current_year }} | Desenvolvido por <a href="https://github.com/brenovsky/" target="_blank">Breno de Carvalho</a></p>

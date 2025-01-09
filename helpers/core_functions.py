@@ -4,6 +4,7 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 import io
 from io import BytesIO
 import time
+from .exceptions import InvalidUserException
 
 
 requests_cache.install_cache("skoob_cache", expire_after=3600)
@@ -13,6 +14,14 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 }
 
+def isUserValid(user_id):
+    url = f"https://www.skoob.com.br/usuario/{user_id}"
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 404:
+        raise InvalidUserException(user_id)
+    
+    return True
 def totalReadBooksAndYears(user_id, total_grid_books, current_year):
     target_year = current_year
     total_read_books = 0
