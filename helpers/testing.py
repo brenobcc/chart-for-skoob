@@ -2,7 +2,7 @@ from core_functions import *
 
 print("Recebendo dados...")
 
-user_id = 7083090
+user_id = #
 columns = 4
 lines = 3
 

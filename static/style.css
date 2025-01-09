@@ -194,3 +194,8 @@ p a {
     flex: 1;
     padding: 10px;
 }
+
+ul li.privacy {
+    font-weight: bold;
+    font-size: 20px;
+}
