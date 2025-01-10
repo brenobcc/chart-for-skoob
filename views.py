@@ -23,16 +23,21 @@ def homepage():
 
         paste_star = "paste_star" in request.form
         
-        chart_img_grid = startProcess(user_id, column, line, paste_star)
+        try:
+            chart_img_grid = startProcess(user_id, column, line, paste_star)
         
         ###Exceptions###
         #1. Invalid user
-        if chart_img_grid == InvalidUserException:
-            return render_template("error.html", current_year=current_year, user_id=user_id, error_code=1)
-        
+        except InvalidUserException as e:
+            return render_template("error.html", current_year=current_year, user_id=e.user_id, error_code=1)
+            
         #2. Not enough registered books
-        if chart_img_grid == None or chart_img_grid == ValueError:
-            return render_template("error.html", current_year=current_year)
+        except NotEnoughRegisteredBooks as e:
+            return render_template("error.html", current_year=current_year,total_read_books=e.total_read_books, total_grid_books=e.total_grid_books, error_code=2)
+        
+        # Generic error
+        except Exception as e:
+            return render_template("error.html", current_year=current_year, error_code=3)
         
         img_base64 = base64.b64encode(chart_img_grid.getvalue()).decode('utf-8')
         

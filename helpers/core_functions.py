@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 import io
 from io import BytesIO
 import time
-from .exceptions import InvalidUserException
+from helpers.exceptions import *
 
 
 requests_cache.install_cache("skoob_cache", expire_after=3600)
@@ -40,6 +40,9 @@ def totalReadBooksAndYears(user_id, total_grid_books, current_year):
         
         target_year -= 1
 
+    if total_grid_books > total_read_books:
+        raise NotEnoughRegisteredBooks(total_read_books, total_grid_books)
+    
     return total_read_books, read_years
 
 def mockPageResponseByYear(user_id, target_year, read_years):

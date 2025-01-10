@@ -7,8 +7,8 @@ user_id = #
 try:
     isUserValid(user_id)
     
-    columns = 4
-    lines = 3
+    columns = 10
+    lines = 10
 
     total_grid_books = columns * lines
 
@@ -49,4 +49,7 @@ try:
     except Exception as e:
         print(e)
 except InvalidUserException as e:
+    print(e)
+    
+except NotEnoughRegisteredBooks as e:
     print(e)

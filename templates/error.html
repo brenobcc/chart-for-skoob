@@ -22,9 +22,14 @@
     </header>
 
     <section>
+        <h1>Erro {{ error_code }}</h1>
         {% if error_code == 1 %}
-        <h1>Erro {{ error_code }}: Usuário inválido</h1>
         <p>O usuário <strong>{{ user_id }}</strong> não existe na base de dados do Skoob. Por favor, tente novamente.</p>
+        {% elif error_code == 2 %}
+        <p>Sua quantidade de livros registrados é insuficiente para gerar o grid. ({{total_read_books}} de {{total_grid_books}} livros)</p>
+        {% elif error_code == 3 %}
+        <p>Algo deu errado enquanto seu grid era gerado. Por favor, tente novamente.</p>
+        <p>Se o problema persistir, relate o acontecimento por meio do e-mail <a href="mailto:breno.cvcr@gmail.com">breno.cvcr@gmail.com</a>.</p>
         {% endif %}
         
         <div class="tenor-gif-embed" data-postid="1531060873366620229" data-share-method="host" data-aspect-ratio="1.16355" data-width="100%"><a href="https://tenor.com/view/sad-sorry-gif-1531060873366620229">Sad Sorry GIF</a>from <a href="https://tenor.com/search/sad-gifs">Sad GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>

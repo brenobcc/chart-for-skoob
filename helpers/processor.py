@@ -1,7 +1,7 @@
-from .core_functions import *
+from helpers.core_functions import *
 from datetime import datetime
 import time
-from .exceptions import *
+from helpers.exceptions import *
 
 def startProcess(user_id, columns, lines, paste_star):
     print("Recebendo dados...")
@@ -47,5 +47,14 @@ def startProcess(user_id, columns, lines, paste_star):
 
         except Exception as e:
             print(e)
-    except InvalidUserException:
-        return InvalidUserException
+            raise(e)
+            
+    except InvalidUserException as e:
+        print(e)
+        raise e
+    except NotEnoughRegisteredBooks as e:
+        print(e)
+        raise e
+    except Exception as e:
+        print(e)
+        raise(e)
