@@ -4,6 +4,7 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 import io
 from io import BytesIO
 import time
+from helpers.exceptions import *
 
 
 requests_cache.install_cache("skoob_cache", expire_after=3600)
@@ -13,24 +14,35 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 }
 
+def isUserValid(user_id):
+    url = f"https://www.skoob.com.br/usuario/{user_id}"
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 404:
+        raise InvalidUserException(user_id)
+    
+    return True
 def totalReadBooksAndYears(user_id, total_grid_books, current_year):
+    target_year = current_year
     total_read_books = 0
     read_years = {}
     
-    for i in range(current_year, 2008, -1):
-        url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{i}/page:1/limit:1/"
+    while (target_year > 2008 and total_grid_books > total_read_books):
+        url = f"https://www.skoob.com.br/v1/bookcase/books/{user_id}/year:{target_year}/page:1/limit:1/"
         response = requests.get(url, headers=headers)
         response_json = response.json()
 
-        if response_json["response"] != []:
+        if response_json["response"]:
             total_read_books_by_year = response_json["paging"]["total"]
             total_read_books += total_read_books_by_year
             
-            read_years[f"{i}"] = total_read_books_by_year
+            read_years[f"{target_year}"] = total_read_books_by_year
         
-        if total_grid_books <= total_read_books:
-            break
+        target_year -= 1
 
+    if total_grid_books > total_read_books:
+        raise NotEnoughRegisteredBooks(total_read_books, total_grid_books)
+    
     return total_read_books, read_years
 
 def mockPageResponseByYear(user_id, target_year, read_years):
@@ -141,7 +153,7 @@ def processImage(book_json, book_edition, paste_star):
 
         return book_img_resized
 
-def createByteImageArray(user_id, read_years, paste_star):
+def createByteImageArray(user_id, book_quantity, read_years, paste_star):
     chart_imgs = {}
     
     book_count = 0
@@ -152,7 +164,7 @@ def createByteImageArray(user_id, read_years, paste_star):
         total_read_books_by_year = response_json["paging"]["total"]
         
         # Algoritmo para varrer JSON
-        for i in range(total_read_books_by_year - 1, -1, -1):
+        for i in range(total_read_books_by_year - 1, - 1, -1):
             book_count += 1
             
             target_element = response_json["response"][i]
@@ -167,8 +179,9 @@ def createByteImageArray(user_id, read_years, paste_star):
 
             book_img.save(img_byte_value, format="JPEG")
             chart_imgs[f"{book_count}-{book_name}"] = img_byte_value.getvalue()
-        
-    return chart_imgs
+            
+            if book_count >= book_quantity:
+                return chart_imgs
 
 # Gerar grid de imagens
 def createGrid(columns, lines, chart_imgs):

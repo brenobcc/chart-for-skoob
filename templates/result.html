@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contato</title>
+    <title>Chart for Skoob</title>
     <link rel="stylesheet" href="static/style.css">
-    
 </head>
 <body>
     <header>
@@ -22,11 +21,22 @@
     </header>
 
     <section class="main-section">
-        <h1>Contato</h1>
-            
-        <p>Caso possua alguma dúvida, sugestão ou crítica ao projeto, por favor, entre em contato através do e-mail <a href="mailto:breno.cvcr@gmail.com">breno.cvcr@gmail.com</a>.</p>
-        
-        <p>Estou pronto para ajudar e ouvir suas ideias! Fique à vontade para me contar o que pensa e como posso melhorar a aplicação.</p>
+        <h1 class="result">O seu chart está pronto!</h1>
+
+        <section class="grid-container">
+            <img class="grid-image" src="{{ image_src }}" alt="Imagem Gerada">
+        </section>
+
+        <section class="grid-size download">
+            <a class="a-button" href="{{ image_src }}" download="chart_{{ user_id }}{{ current_time_generate }}.png">
+                <button class="button-generate" style="justify-self: center;">Baixar imagem</button>
+            </a>
+
+            <a id="other-chart" class="a-button" href="{{ url_for('homepage') }}">
+                <strong>↺</strong> Gerar outro chart
+            </a>
+        </section>
+
     </section>
 
     <footer>

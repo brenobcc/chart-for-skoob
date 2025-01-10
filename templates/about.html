@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,24 +9,30 @@
 </head>
 <body>
     <header>
-        <h1>Chart for Skoob</h1>
-    </header>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('homepage') }}">Início</a></li>
-            <li><a href="{{ url_for('about') }}">Sobre</a></li>
-            <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
-            <li><a href="{{ url_for('contact') }}">Contato</a></li>
-        </ul>
-    </nav>
+        <a href="{{ url_for('homepage') }}"><h1 class="logo">Chart for Skoob</h1></a>
 
-    <section>
+        <nav class="nav">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Início</a></li>
+                <li><a href="{{ url_for('about') }}">Sobre</a></li>
+                <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
+                <li><a href="{{ url_for('contact') }}">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="main-section">
         <h1>Sobre a aplicação</h1>
             
-        <p>Esse site não usa os seus dados.</p>
+        <p><strong>Chart for Skoob</strong> é uma aplicação, criada de leitor para leitor, com o intuito de facilitar a visualização de seu histórico literário do Skoob. Com ela, é possível gerar uma grade de tamanho personalizável com os seus últimos livros registrados na plataforma, para que você possa compartilhar com amigos, postar nas redes sociais ou guardar de recordação na sua galeria.</p>
+
+        <p>Desenvolvido com Flask (Python), o algoritmo busca dados que podem ser acessados de maneira pública e oferece uma experiência intuitiva e amigável, permitindo que o usuário acompanhe as suas leituras visualmente. O sistema foi inspirado em outros sites que também possuem um funcionamento semelhante (gerar grids e charts baseados em seus registros), como o <a href="https://receiptify.herokuapp.com/" target="_blank">Receiptify</a>, <a href="https://www.statsforspotify.com/" target="_blank">Stats for Spotify</a>, <a href="https://www.tapmusic.net/" target="_blank">Tap Music</a> e o <a href="https://t.me/letterboxdgrambot" target="_blank">Letterboxdgram</a >.
+            
+        <p>O Chart for Skoob é ideal para quem deseja acompanhar sua jornada literária de maneira visual e dinâmica, sem complicações. Além disso, o código-fonte da aplicação está disponível no <a href="https://github.com/brenovsky/skoob-chart/" target="_blank">Github</a>. Sinta-se livre para acessar se identificar problemas ou bugs, solicitar melhorias ou até mesmo aprimorar os algoritmos.</p>
+
     </section>
     <footer>
-        <p>Desenvolvido por Breno de Carvalho</p>
+        <p>© {{ current_year }} | Desenvolvido por <a href="https://github.com/brenovsky/" target="_blank">Breno de Carvalho</a></p>
     </footer>
 </body>
 </html>

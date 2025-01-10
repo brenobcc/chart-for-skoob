@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,24 +9,35 @@
 </head>
 <body>
     <header>
-        <h1>Chart for Skoob</h1>
+        <a href="{{ url_for('homepage') }}"><h1 class="logo">Chart for Skoob</h1></a>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Início</a></li>
+                <li><a href="{{ url_for('about') }}">Sobre</a></li>
+                <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
+                <li><a href="{{ url_for('contact') }}">Contato</a></li>
+            </ul>
+        </nav>
     </header>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('homepage') }}">Início</a></li>
-            <li><a href="{{ url_for('about') }}">Sobre</a></li>
-            <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
-            <li><a href="{{ url_for('contact') }}">Contato</a></li>
-        </ul>
-    </nav>
 
     <section>
-        <h1>Erro</h1>
-            
-        <p>Mensagem de erro.</p>
+        <h1>Erro {{ error_code }}</h1>
+        {% if error_code == 1 %}
+        <p>O usuário <strong>{{ user_id }}</strong> não existe na base de dados do Skoob. Por favor, tente novamente.</p>
+        {% elif error_code == 2 %}
+        <p>Sua quantidade de livros registrados é insuficiente para gerar o grid. ({{total_read_books}} de {{total_grid_books}} livros)</p>
+        {% elif error_code == 3 %}
+        <p>Algo deu errado enquanto seu grid era gerado. Por favor, tente novamente.</p>
+        <p>Se o problema persistir, relate o acontecimento por meio do e-mail <a href="mailto:breno.cvcr@gmail.com">breno.cvcr@gmail.com</a>.</p>
+        {% endif %}
+        
+        <div class="tenor-gif-embed" data-postid="1531060873366620229" data-share-method="host" data-aspect-ratio="1.16355" data-width="100%"><a href="https://tenor.com/view/sad-sorry-gif-1531060873366620229">Sad Sorry GIF</a>from <a href="https://tenor.com/search/sad-gifs">Sad GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+
+
     </section>
     <footer>
-        <p>Desenvolvido por Breno de Carvalho</p>
+        <p>© {{ current_year }} | Desenvolvido por <a href="https://github.com/brenovsky/" target="_blank">Breno de Carvalho</a></p>
     </footer>
 </body>
 </html>

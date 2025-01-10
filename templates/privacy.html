@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,24 +9,70 @@
 </head>
 <body>
     <header>
-        <h1>Chart for Skoob</h1>
-    </header>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('homepage') }}">Início</a></li>
-            <li><a href="{{ url_for('about') }}">Sobre</a></li>
-            <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
-            <li><a href="{{ url_for('contact') }}">Contato</a></li>
-        </ul>
-    </nav>
+        <a href="{{ url_for('homepage') }}"><h1 class="logo">Chart for Skoob</h1></a>
 
-    <section>
+        <nav class="nav">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Início</a></li>
+                <li><a href="{{ url_for('about') }}">Sobre</a></li>
+                <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
+                <li><a href="{{ url_for('contact') }}">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="main-section">
         <h1>Política de Privacidade</h1>
             
-        <p>Esse site não usa os seus dados.</p>
+        <p>A segurança dos seus dados pessoais é muito importante. Esta Política de Privacidade descreve como coletamos, utilizamos, armazenamos e protegemos as informações relacionadas ao uso da nossa aplicação, em conformidade com a Lei Geral de Proteção de Dados Pessoais (LGPD - Lei 13.709/2018) e outras legislações aplicáveis.</p>
+
+        <ul class="privacy">
+            <li class="privacy">Dados Coletados</li>
+            <p>Nosso sistema realiza requisições para coletar dados públicos disponíveis no site do Skoob, como informações sobre livros, leitores e avaliações. Os dados coletados são provenientes do próprio site e são acessíveis ao público por meio da ferramenta de inspeção e análise dos tráfegos de conexão (também disponíveis publicamente). Não coletamos informações sigilosas, como senhas, endereços ou qualquer outra informação pessoal sensível. As informações que coletamos são relacionadas ao conteúdo público disponível no Skoob, incluindo:</p>
+            
+            <ul>
+                <li><p>Informações sobre livros (títulos, imagens, etc.);</p></li>
+                <li><p>Dados públicos sobre usuários do Skoob (como a listagens de livros anuais e suas avaliações, que são acessíveis publicamente).</p></li>
+            </ul>
+
+            <li class="privacy">Uso das Informações</li>
+            <p>As informações coletadas são utilizadas apenas para os seguintes fins:</p>
+            
+            <ul>
+                <li><p>Exibição de dados públicos do Skoob na nossa aplicação, de forma a gerar estatísticas, através dos grids;</p></li>
+                <li><p>Melhorar a experiência do usuário com o aplicativo, tornando possível um resumo do histórico de leitura com base nos dados acessados;</p></li>
+                <li><p>Não usamos os dados coletados para fins de marketing ou outras finalidades não relacionadas ao objetivo principal da aplicação.</p></li>
+            </ul>
+            
+            <li class="privacy">Armazenamento de Dados</li>
+            <p>Não armazenamos nenhuma informação sigilosa ou privada dos usuários. Todas as informações utilizadas são provenientes de dados públicos acessíveis via o site do Skoob. Essas informações são temporariamente processadas durante as requisições e não são armazenadas permanentemente em nossa infraestrutura.</p>
+            
+            <li class="privacy">Compartilhamento de Dados</li>
+            <p>Não compartilhamos suas informações com terceiros, exceto quando necessário para cumprir com obrigações legais ou em casos de requerimento judicial. Não vendemos ou transferimos seus dados pessoais a outros serviços ou empresas.</p>
+            
+            <li class="privacy">Direitos do Titular dos Dados</li>
+            <p>Em conformidade com a LGPD, você tem os seguintes direitos em relação aos seus dados pessoais:</p>
+            
+            <ul>
+                <li><p>Confirmação da existência de tratamento de dados pessoais;</p></li>
+                <li><p>Acesso aos dados pessoais;</p></li>
+                <li><p>Eliminação dos dados pessoais, quando aplicável;</p></li>
+                <li><p>Caso deseje exercer qualquer um desses direitos, entre em contato conosco através do e-mail <a href="mailto:breno.cvcr@gmail.com">breno.cvcr@gmail.com</a>.</p></li>
+            </ul>
+            
+            <li class="privacy">Cookies e Tecnologias Semelhantes</li>
+            <p>Nosso sistema pode utilizar cookies para melhorar a navegação e a experiência do usuário, mas esses cookies não são utilizados para coletar informações sensíveis. Você pode gerenciar a aceitação de cookies por meio das configurações do seu navegador.</p>
+            
+            <li class="privacy">Alterações na Política de Privacidade</li>
+            <p>Podemos atualizar esta Política de Privacidade de tempos em tempos. Sempre que houver mudanças substanciais, publicaremos a versão atualizada neste documento, com a respectiva data de atualização. Recomendamos que você consulte periodicamente esta página para se manter informado.</p>
+
+            <li class="privacy">Sobre afiliações</li>
+            <p>Não possuímos nenhuma ligação com a empresa Skoob e com nenhum dos seus parceiros.</p>
+        </ul>
+    </p>
     </section>
     <footer>
-        <p>Desenvolvido por Breno de Carvalho</p>
+        <p>© {{ current_year }} | Desenvolvido por <a href="https://github.com/brenovsky/" target="_blank">Breno de Carvalho</a></p>
     </footer>
 </body>
 </html>
