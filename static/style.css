@@ -113,6 +113,7 @@ label {
     border: 1px solid #2c2d2e;
     padding: 5px 12px;
     border-radius: 10px;
+    width: 124px;
 }
 
 .button-generate {
@@ -182,9 +183,9 @@ a#other-chart:visited {
     text-decoration: none;
 }
 
-p {
+/* p {
     text-align: justify;
-}
+} */
 
 p a {
     text-decoration: none;
@@ -204,4 +205,47 @@ div.tenor-gif-embed {
     max-width: 50vw;
     max-height: 50vh;
     justify-self: center;
+}
+
+@media (max-width: 768px) {
+    /* * {
+        font-size: small;
+    }
+
+    h1 {
+        font-size: large;
+    }
+
+    h2 {
+        font-size: medium;
+    }
+
+    .grid-image {
+        max-width: 300px;
+        max-height: 300px;
+    } */
+}
+
+@media (max-width: 425px) {
+    * {
+        font-size: small;
+    }
+
+    h1 {
+        font-size: large;
+    }
+
+    h2 {
+        font-size: medium;
+    }
+
+    .grid-image {
+        max-width: 300px;
+        max-height: 300px;
+    }
+
+    a.a-button {
+        margin: 15px;
+        font-size: 16px;
+    }
 }
