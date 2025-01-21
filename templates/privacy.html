@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=menu" />
     
 </head>
 <body>
     <header>
-        <a href="{{ url_for('homepage') }}"><h1 class="logo">Chart for Skoob</h1></a>
+        <section id="header-section">
+            <a href="{{ url_for('homepage') }}"><h1 class="logo">Chart for Skoob</h1></a>
+            <span id="burguer" class="material-symbols-outlined">menu</span>
+        </section>
 
-        <nav class="nav">
+        <nav id="main-nav" class="nav">
             <ul>
                 <li><a href="{{ url_for('homepage') }}">Início</a></li>
                 <li><a href="{{ url_for('about') }}">Sobre</a></li>
@@ -22,6 +26,7 @@
     </header>
 
     <section class="main-section">
+
         <h1>Política de Privacidade</h1>
             
         <p>A segurança dos seus dados pessoais é muito importante. Esta Política de Privacidade descreve como coletamos, utilizamos, armazenamos e protegemos as informações relacionadas ao uso da nossa aplicação, em conformidade com a Lei Geral de Proteção de Dados Pessoais (LGPD - Lei 13.709/2018) e outras legislações aplicáveis.</p>
@@ -74,5 +79,7 @@
     <footer>
         <p>© {{ current_year }} | Desenvolvido por <a href="https://github.com/brenovsky/" target="_blank">Breno de Carvalho</a></p>
     </footer>
+
+    <script src="static/main.js"></script>
 </body>
 </html>

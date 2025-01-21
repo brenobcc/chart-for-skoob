@@ -207,7 +207,27 @@ div.tenor-gif-embed {
     justify-self: center;
 }
 
+span#burguer {
+    display: none;
+}
+
+section.burguer-menu {
+    display: none;
+}
+
+section#header-section span{
+    display: none;
+}
+
+h2 {
+    font-size: large;
+}
+
 @media (max-width: 768px) {
+    header {
+        display: flex;
+        flex-direction: column;
+    }
     /* * {
         font-size: small;
     }
@@ -224,6 +244,39 @@ div.tenor-gif-embed {
         max-width: 300px;
         max-height: 300px;
     } */
+
+    nav {
+        display: none;
+    }
+
+    nav ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav ul li {
+        padding-top: 8px;
+    }
+
+    section#header-section span{
+        display: block;
+    }
+
+    #header-section {
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    span#burguer {
+        display: block;
+        font-size: 36px !important;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        margin-left: auto;
+        padding: 10px;
+    }
 }
 
 @media (max-width: 425px) {
@@ -233,6 +286,10 @@ div.tenor-gif-embed {
 
     h1 {
         font-size: large;
+    }
+
+    h1.logo {
+        font-size: 30px;
     }
 
     h2 {
@@ -247,5 +304,9 @@ div.tenor-gif-embed {
     a.a-button {
         margin: 15px;
         font-size: 16px;
+    }
+
+    span#burguer {
+        font-size: 32px !important;
     }
 }
