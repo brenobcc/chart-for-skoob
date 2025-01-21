@@ -246,16 +246,18 @@ h2 {
 
     nav {
         display: none;
+        border: 1px solid #5254558c;
     }
 
     nav ul {
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100vw;
     }
 
     nav ul li {
-        padding-top: 8px;
+        padding-top: 12px;
     }
 
     section#header-section span{
