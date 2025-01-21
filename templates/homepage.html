@@ -5,18 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chart for Skoob</title>
     <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=menu" />
 </head>
 <body>
     <header>
-        <a href="{{ url_for('homepage') }}"><h1 class="logo">Chart for Skoob</h1></a>
+        <section id="header-section">
+            <a href="{{ url_for('homepage') }}"><h1 class="logo">Chart for Skoob</h1></a>
+            <span id="burguer" class="material-symbols-outlined">menu</span>
+        </section>
 
-        <div class="menu-toggle" onclick="toggleMenu()">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-
-        <nav class="nav">
+        <nav id="main-nav" class="nav">
             <ul>
                 <li><a href="{{ url_for('homepage') }}">Início</a></li>
                 <li><a href="{{ url_for('about') }}">Sobre</a></li>
@@ -27,6 +25,7 @@
     </header>
 
     <section class="main-section">
+
         <h1>Gere o seu chart de livros!</h1>
 
         <p>Para obter o seu <strong>código de usuário</strong> do Skoob, siga estas etapas:</p> 
@@ -44,7 +43,7 @@
             <form class="form" method="POST">
                 
                 <section class="input-section">
-                    <label for="user_id">Código de usuário</label>
+                    <label for="user_id">Código de usuário:</label>
                     <input class="input-id" type="text" name="user_id" placeholder="Digite o seu código" required>
                 </section>
             
@@ -72,6 +71,6 @@
         <p>© {{ current_year }} | Desenvolvido por <a href="https://github.com/brenovsky/" target="_blank">Breno de Carvalho</a></p>
     </footer>
 
-    <script src="../static/loadingImage.js"></script>
+    <script src="static/main.js"></script>
 </body>
 </html>

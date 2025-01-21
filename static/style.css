@@ -113,6 +113,7 @@ label {
     border: 1px solid #2c2d2e;
     padding: 5px 12px;
     border-radius: 10px;
+    width: 124px;
 }
 
 .button-generate {
@@ -143,7 +144,6 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f8f8f8;
     padding: 20px;
     text-align: center;
     margin-top: 36px;
@@ -182,9 +182,9 @@ a#other-chart:visited {
     text-decoration: none;
 }
 
-p {
+/* p {
     text-align: justify;
-}
+} */
 
 p a {
     text-decoration: none;
@@ -204,4 +204,110 @@ div.tenor-gif-embed {
     max-width: 50vw;
     max-height: 50vh;
     justify-self: center;
+}
+
+span#burguer {
+    display: none;
+}
+
+section.burguer-menu {
+    display: none;
+}
+
+section#header-section span{
+    display: none;
+}
+
+h2 {
+    font-size: large;
+}
+
+@media (max-width: 768px) {
+    header {
+        display: flex;
+        flex-direction: column;
+    }
+    /* * {
+        font-size: small;
+    }
+
+    h1 {
+        font-size: large;
+    }
+
+    h2 {
+        font-size: medium;
+    }
+
+    .grid-image {
+        max-width: 300px;
+        max-height: 300px;
+    } */
+
+    nav {
+        display: none;
+        border: 1px solid #5254558c;
+    }
+
+    nav ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100vw;
+    }
+
+    nav ul li {
+        padding-top: 12px;
+    }
+
+    section#header-section span{
+        display: block;
+    }
+
+    #header-section {
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    span#burguer {
+        display: block;
+        font-size: 36px !important;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        margin-left: auto;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 425px) {
+    * {
+        font-size: small;
+    }
+
+    h1 {
+        font-size: large;
+    }
+
+    h1.logo {
+        font-size: 30px;
+    }
+
+    h2 {
+        font-size: medium;
+    }
+
+    .grid-image {
+        max-width: 300px;
+        max-height: 300px;
+    }
+
+    a.a-button {
+        margin: 15px;
+        font-size: 16px;
+    }
+
+    span#burguer {
+        font-size: 32px !important;
+    }
 }

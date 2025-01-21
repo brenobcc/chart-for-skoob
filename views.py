@@ -49,16 +49,6 @@ def homepage():
     
     return render_template("homepage.html", current_year=current_year, image_src=image_src)
 
-@app.route('/image')
-def serve_image():
-    image_data = request.args.get("image_data")
-    if image_data:
-        chart_img = io.BytesIO(image_data.encode('utf-8'))
-        chart_img.seek(0)
-        
-        return send_file(chart_img, mimetype='image/png')
-    return "No image data found", 400
-
 @app.route('/sobre')
 def about():
     return render_template("about.html", current_year=current_year)
