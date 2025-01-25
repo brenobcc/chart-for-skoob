@@ -14,12 +14,38 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 }
 
+def validateInput(user_input):
+    site_link = "https://www.skoob.com.br/usuario/"
+    app_link = "https://www.skoob.com.br/share/user/"
+    
+    try:
+        #URL Site
+        if user_input[:33] == site_link:
+            print("OK! site!")
+            return 
+        
+        #URL App
+        if user_input[:36] == app_link:
+            print("Ok! App!")
+            return
+        
+        #User ID
+        if int(user_input):
+            print("Ok! Codigo!")
+            return
+        
+    except Exception as e:
+        print(e)
+        raise InvalidUserInput(user_input)
+    
+# def getUserID
+
 def isUserValid(user_id):
     url = f"https://www.skoob.com.br/usuario/{user_id}"
     response = requests.get(url, headers=headers)
     
     if response.status_code == 404:
-        raise InvalidUserException(user_id)
+        raise InvalidUserId(user_id)
     
     return True
 def totalReadBooksAndYears(user_id, total_grid_books, current_year):
@@ -80,11 +106,11 @@ def improveImageQuality(book_img):
 def openStar(star_type):
     # Estrela cheia
     if star_type == 0:
-        img_star = Image.open("static/images/star-3.png").convert("RGBA")
+        img_star = Image.open("static/images/star-4.png").convert("RGBA")
         return img_star.resize((44, 44))
     
     # Meia estrela
-    img_star = Image.open("static/images/half-star-3.png").convert("RGBA")
+    img_star = Image.open("static/images/half-star-4.png").convert("RGBA")
     return img_star.resize((44, 44))
 
 def pasteStar(book_json, book_img):
@@ -101,11 +127,11 @@ def pasteStar(book_json, book_img):
 
     for i in range(int(book_rating)):
         img_star = openStar(0)
-        book_img.paste(img_star, (8 + (i * 50), 575), img_star)
+        book_img.paste(img_star, (12 + (i * 52), 575), img_star)
     
     if type(book_rating) == float:
         img_half_star = openStar(1)
-        book_img.paste(img_half_star, (8 + ((i + 1) * 50), 575), img_half_star)
+        book_img.paste(img_half_star, (12 + ((i + 1) * 52), 575), img_half_star)
     
     return book_img
 

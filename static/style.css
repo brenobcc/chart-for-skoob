@@ -281,9 +281,6 @@ h2 {
 }
 
 @media (max-width: 425px) {
-    * {
-        font-size: small;
-    }
 
     h1 {
         font-size: large;

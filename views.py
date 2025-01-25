@@ -28,7 +28,7 @@ def homepage():
         
         ###Exceptions###
         #1. Invalid user
-        except InvalidUserException as e:
+        except InvalidUserId as e:
             return render_template("error.html", current_year=current_year, user_id=e.user_id, error_code=1)
             
         #2. Not enough registered books

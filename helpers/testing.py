@@ -3,7 +3,8 @@ from exceptions import *
 
 print("Recebendo dados...")
 
-user_id = #
+user_input = ""
+
 try:
     isUserValid(user_id)
     
