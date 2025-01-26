@@ -28,10 +28,12 @@
     <section class="main-section">
         <h1>Erro {{ error_code }}</h1>
         {% if error_code == 1 %}
-        <p>O usuário <strong>{{ user_id }}</strong> não existe na base de dados do Skoob. Por favor, tente novamente.</p>
+        <p>A entrada foi inválida. Confira se utilizou a URL correta do Skoob.</p>
         {% elif error_code == 2 %}
-        <p>Sua quantidade de livros registrados é insuficiente para gerar o grid. ({{total_read_books}} de {{total_grid_books}} livros)</p>
+        <p>O usuário inserido não existe na base de dados do Skoob. Por favor, tente novamente.</p>
         {% elif error_code == 3 %}
+        <p>Sua quantidade de livros registrados é insuficiente para gerar o grid. ({{total_read_books}} de {{total_grid_books}} livros)</p>
+        {% elif error_code == 4 %}
         <p>Algo deu errado enquanto seu grid era gerado. Por favor, tente novamente.</p>
         <p>Se o problema persistir, relate o acontecimento por meio do e-mail <a href="mailto:breno.cvcr@gmail.com">breno.cvcr@gmail.com</a>.</p>
         {% endif %}

@@ -22,23 +22,48 @@ def validateInput(user_input):
         #URL Site
         if user_input[:33] == site_link:
             print("OK! site!")
-            return 
+            return 1
         
         #URL App
         if user_input[:36] == app_link:
             print("Ok! App!")
-            return
+            return 2
         
         #User ID
         if int(user_input):
             print("Ok! Codigo!")
-            return
+            return 3
         
     except Exception as e:
         print(e)
         raise InvalidUserInput(user_input)
     
-# def getUserID
+def getUserId(user_input, input_type):
+    if input_type == 1:
+        user_id = ""
+        for i in range(33, len(user_input)):
+            if user_input[i] == '-':
+                return int(user_id)
+            
+            if not user_input[i].isdigit():
+                raise InvalidUserId
+            
+            user_id += user_input[i]
+
+    if input_type == 2:
+        user_id = ""
+        for i in range(36, len(user_input)):  
+            if not user_input[i].isdigit():
+                raise InvalidUserId(user_input)
+            
+            user_id += user_input[i]
+            
+        return int(user_id)
+        
+    if input_type == 3:
+        return int(user_input)
+    
+    return int(user_id)
 
 def isUserValid(user_id):
     url = f"https://www.skoob.com.br/usuario/{user_id}"

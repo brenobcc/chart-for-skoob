@@ -49,7 +49,7 @@ try:
 
     except Exception as e:
         print(e)
-except InvalidUserException as e:
+except InvalidUserId as e:
     print(e)
     
 except NotEnoughRegisteredBooks as e:
