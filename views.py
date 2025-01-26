@@ -15,7 +15,7 @@ def homepage():
     image_src = "static/images/instructions.png"
     
     if request.method == "POST":
-        user_id = request.form["user_id"]
+        user_input = request.form["user_id"]
         
         grid_size = request.form["grid_size"]
         
@@ -24,20 +24,23 @@ def homepage():
         paste_star = "paste_star" in request.form
         
         try:
-            chart_img_grid = startProcess(user_id, column, line, paste_star)
+            chart_img_grid = startProcess(user_input, column, line, paste_star)
         
         ###Exceptions###
-        #1. Invalid user
-        except InvalidUserException as e:
-            return render_template("error.html", current_year=current_year, user_id=e.user_id, error_code=1)
+        #1. Invalid input
+        except InvalidUserInput as e:
+            return render_template("error.html", current_year=current_year, error_code=1)
+        #2. Invalid user
+        except InvalidUserId as e:
+            return render_template("error.html", current_year=current_year, error_code=2)
             
-        #2. Not enough registered books
+        #3. Not enough registered books
         except NotEnoughRegisteredBooks as e:
-            return render_template("error.html", current_year=current_year,total_read_books=e.total_read_books, total_grid_books=e.total_grid_books, error_code=2)
+            return render_template("error.html", current_year=current_year,total_read_books=e.total_read_books, total_grid_books=e.total_grid_books, error_code=3)
         
         # Generic error
         except Exception as e:
-            return render_template("error.html", current_year=current_year, error_code=3)
+            return render_template("error.html", current_year=current_year, error_code=4)
         
         img_base64 = base64.b64encode(chart_img_grid.getvalue()).decode('utf-8')
         
@@ -45,7 +48,7 @@ def homepage():
         
         image_src = f"data:image/png;base64,{img_base64}"
 
-        return render_template("result.html", image_data=img_base64, user_id=user_id, current_time_generate=current_time_generate, current_year=current_year, image_src=image_src)
+        return render_template("result.html", image_data=img_base64, user_id=user_input, current_time_generate=current_time_generate, current_year=current_year, image_src=image_src)
     
     return render_template("homepage.html", current_year=current_year, image_src=image_src)
 

@@ -3,7 +3,8 @@ from exceptions import *
 
 print("Recebendo dados...")
 
-user_id = #
+user_input = ""
+
 try:
     isUserValid(user_id)
     
@@ -48,7 +49,7 @@ try:
 
     except Exception as e:
         print(e)
-except InvalidUserException as e:
+except InvalidUserId as e:
     print(e)
     
 except NotEnoughRegisteredBooks as e:
