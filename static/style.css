@@ -79,10 +79,10 @@ div#chart_img {
 }
 
 .grid-container {
-    justify-self: center;
+    display: grid;
     width: fit-content;
     height: fit-content;
-    position: relative;
+    margin: 0 auto;
 }
 
 .grid-image {
@@ -151,7 +151,7 @@ footer {
 
 h1.result {
     width: fit-content;
-    justify-self: center;
+    margin: 0 auto;
 }
 
 .download {
