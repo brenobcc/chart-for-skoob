@@ -79,10 +79,10 @@ div#chart_img {
 }
 
 .grid-container {
-    justify-self: center;
+    display: grid;
     width: fit-content;
     height: fit-content;
-    position: relative;
+    margin: 0 auto;
 }
 
 .grid-image {
@@ -151,7 +151,12 @@ footer {
 
 h1.result {
     width: fit-content;
-    justify-self: center;
+    margin: 0 auto;
+}
+
+.disclaimer {
+    color: red;
+    font-weight: bold;
 }
 
 .download {
@@ -281,9 +286,6 @@ h2 {
 }
 
 @media (max-width: 425px) {
-    * {
-        font-size: small;
-    }
 
     h1 {
         font-size: large;

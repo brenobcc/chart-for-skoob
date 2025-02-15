@@ -3,10 +3,13 @@ from datetime import datetime
 import time
 from helpers.exceptions import *
 
-def startProcess(user_id, columns, lines, paste_star):
+def startProcess(user_input, columns, lines, paste_star):
     print("Recebendo dados...")
 
     try:
+        input_type = validateInput(user_input)
+        user_id = getUserId(user_input, input_type)
+        
         isUserValid(user_id)
         
         total_grid_books = columns * lines
@@ -49,7 +52,7 @@ def startProcess(user_id, columns, lines, paste_star):
             print(e)
             raise(e)
             
-    except InvalidUserException as e:
+    except InvalidUserId as e:
         print(e)
         raise e
     except NotEnoughRegisteredBooks as e:
