@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=menu" />
+    
+</head>
+<body>
+    <header>
+        <section id="header-section">
+            <a href="{{ url_for('homepage') }}"><h1 class="logo">Chart for Skoob</h1></a>
+            <span id="burguer" class="material-symbols-outlined">menu</span>
+        </section>
+
+        <nav id="main-nav" class="nav">
+            <ul>
+                <li><a href="{{ url_for('homepage') }}">Início</a></li>
+                <li><a href="{{ url_for('about') }}">Sobre</a></li>
+                <li><a href="{{ url_for('privacy') }}">Privacidade</a></li>
+                <li><a href="{{ url_for('contact') }}">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="main-section">
+
+        <h1>Contato</h1>
+            
+        <p>Caso possua alguma dúvida, sugestão ou crítica ao projeto, por favor, entre em contato através do e-mail <a href="mailto:breno.cvcr@gmail.com">breno.cvcr@gmail.com</a>.</p>
+        
+        <p>Estou pronto para ajudar e ouvir suas ideias! Fique à vontade para me contar o que pensa e como posso melhorar a aplicação.</p>
+    </section>
+
+    <footer>
+        <p>© {{ current_year }} | Desenvolvido por <a href="https://github.com/brenovsky/" target="_blank">Breno de Carvalho</a></p>
+    </footer>
+
+    <script src="static/main.js"></script>
+</body>
+</html>
