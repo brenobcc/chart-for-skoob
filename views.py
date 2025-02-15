@@ -12,7 +12,7 @@ error_code = 0
 @app.route('/', methods=["GET", "POST"])
 def homepage():
     
-    image_src = "static/images/instructions.png"
+    image_src = "static/images/instructions-2.png"
     
     if request.method == "POST":
         user_input = request.form["user_id"]
