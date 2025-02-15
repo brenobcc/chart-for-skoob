@@ -154,6 +154,11 @@ h1.result {
     margin: 0 auto;
 }
 
+.disclaimer {
+    color: red;
+    font-weight: bold;
+}
+
 .download {
     display: flex;
     flex-direction: column;
