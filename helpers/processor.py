@@ -39,6 +39,8 @@ def startProcess(user_input, columns, lines, paste_star):
             print(fim - inicio)
             
             print("Grid encerrado.")
+            
+            grid = grid.resize((200 * columns, 300 * lines))
 
             grid_io = io.BytesIO()
             grid.save(grid_io, 'PNG')  # Salva a imagem no buffer em formato PNG
