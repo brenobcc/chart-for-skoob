@@ -31,15 +31,20 @@ git clone https://github.com/brenobcc/chart-for-skoob.git
 Para desfrutar do projeto:
 
 ✅ Certifique-se de ter uma conta no Skoob.
+
 🔗 Insira a URL ou o código de usuário do seu perfil no Skoob.
+
 📊 A aplicação irá gerar grids personalizados com seus últimos livros lidos.
+
 📲 Compartilhe os charts com seus amigos ou nas redes sociais!
 
 ## 🤝 Contribuição
 Você é livre para contribuir com o projeto! Sempre que possível:
 
 💡 Sugira novas funcionalidades.
+
 🐛 Relate problemas ou bugs encontrados.
+
 🔧 Envie pull requests com correções ou melhorias no código.
 
 Vamos juntos tornar a experiência literária no Skoob ainda mais divertida e engajante!
